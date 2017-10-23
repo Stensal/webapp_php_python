@@ -1,0 +1,48 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_view uses content::configure extends abstract_view %>
+
+
+<% template head() %>
+<head>
+    <meta charset="UTF-8">
+    <% include meta() %>
+    <% include global_assets() %>
+    <% include external_assets() %>
+</head>
+<% end template %>
+
+<% template body() %>
+<body onload="stensalui_body_onload();" onresize="stensalui_body_onresize();">
+<script>
+    var stensalui_body_onload = function () {}
+    var stensalui_body_onresize = function () {}
+    var get_model = null;
+</script>
+    <!-- header -->
+    <% include header() %>
+    <!-- main_area -->
+    <% include main_area() %>
+    <% include footer() %>
+</body>
+<% end template %>
+
+
+<% template header() %> = 0
+  <!-- header(html_view) -->
+<% end template %>
+
+<% template main_area() %> = 0
+  <!-- main_area(html_view) -->
+<% end template %>
+
+<% template footer() %>
+<!-- footer(html_view) -->
+<% end template %>
+
+
+
+
+
+<% end view %>
+<% end skin %>

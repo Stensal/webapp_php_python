@@ -1,0 +1,221 @@
+<% c++ #include "nojs_root.h" %>
+<% xhtml %>
+<% skin kennel %>
+<% view all_components uses cppcms::base_content %>
+
+<!-- we define all components that are every used in here -->
+<% template feedback_popup(std::string email) %>
+  <!-- feedback popup begin -->
+  <link rel="stylesheet" href="/static/css/feedback.css"/>
+  <link rel="stylesheet" href="/static/purecss_1_0_0/forms.css"/>
+  <button class="vertical-text pure-button button-small button-secondary"
+          id="feedbackBtn" >Contact us</button>
+  <!-- The Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="pure-g">
+        <div class="pure-u-23-24"></div>
+        <div class="pure-u-1-24">
+          <span class="close">&times;</span>
+        </div>
+      </div>
+        <form class="pure-form pure-form-aligned" 
+	      action='<% url "post-feedback" %>' method="post" id="form">
+          <legend>Contact us</legend>
+          <fieldset>
+              <% if email.empty() %>
+                  <div class="pure-control-group">
+                      <label for="email">Your email:</label>
+                      <input id="email" type="email" name="email"
+                             placeholder="email"
+                             class="pure-input-1-2 form-control login-email">
+                      </input>
+                  </div>
+              <% else %>
+                  <div class="pure-control-group">
+                      <input id="email" type="hidden" name="email" value="<%= email %>"/>
+                  </div>
+              <% end %>
+            <div class="pure-control-group">
+              <label for="subject">Subject:</label>
+              <select id="subject" class="pure-input-1-2">
+                <option>Bug Report</option>
+                <option>Feature Request</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </fieldset>
+          <fieldset>
+            <textarea id="msg" name="message" rows="8"
+                      class="pure-input-1"
+                      placeholder="Message"></textarea>
+          </fieldset>
+          <fieldset>
+              <input id="notify_me" type="checkbox" name="feedback_notification" checked/>
+              <label for="feedback_notification">Notify me new features</label>
+          </fieldset>
+          <button id="submit_feedback" type="submit"
+                  class="pure-button button-secondary button-small">Send</button>
+        </form>
+    </div>
+  </div>
+
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <span class="close" id="span2">&times;</span>
+      <h4></h4>
+    </div>
+  </div>
+  <script>
+    // Get the modal
+    var modal = document.getElementById('modal');
+    var modal2 = document.getElementById('modal2');
+    $("#form").submit(function(e){
+        var context = null;
+        if (get_model != null) {
+            context = get_model();
+        }
+        var sendInfo = {
+            email : document.querySelector("#email").value,
+            subject: document.querySelector("#subject").value,
+            message : document.querySelector("#msg").value,
+            support_context : context,
+            notify_me : document.querySelector("#notify_me").checked,
+        }
+
+        var postData = $(this).serializeArray();
+        var formURL = $(this).attr("action");
+        console.log(sendInfo);
+        if(sendInfo.message == ""){
+            alert ("Fill the message field!");
+            return false;
+        }
+        $.ajax(
+            {
+                url : formURL,
+                type: "POST",
+                dataType: "json",
+                data : JSON.stringify(sendInfo),
+                contentType: "application/json; charset=utf-8",
+                success:function(data, textStatus, jqXHR)
+                {
+                    //data: return data from server
+                    $("#modal").hide();
+                    $("div#modal2 h4").html("Thank you, your feedback has been received.");
+                    $("#modal2").show();
+                    setTimeout(function(){
+                        $("#modal2").hide();
+                    }, 3000);
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    //if fails
+                    $("#modal").hide();
+                    $("div#modal2 h4").html("Oops, Something Went Wrong..., please send email to support@stensal.io ");
+                    console.log(errorThrown);
+                    $("#modal2").show();
+                    setTimeout(function(){
+                        $("#modal2").hide();
+                    }, 3000);
+                },
+            });
+        e.preventDefault(); //STOP default action
+    });
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("feedbackBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    var span2 = document.getElementById("span2");
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    span2.onclick = function() {
+        modal2.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal || event.target == modal2) {
+            modal.style.display = "none";
+            modal2.style.display = "none";
+        }
+    }
+  </script>
+  <!-- feedback popup end -->
+<% end template %>
+
+<% template workspace_link_list(content::workspace_link_list &links) %>
+    <!-- workspace link list -->
+    <% if links.empty() %>
+        <p>You don't have private workspaces, please use the contact us form to request one.</p>
+    <% else %>
+        <% foreach s in links %>
+            <ul>
+                <% item %>
+                    <li><a onclick='gotoWS("/workspace/<%= s.server_id %>/<%= s.port_id %>/", "<%= s.username %>","<%= s.password %>"); return false;'
+                           href="<%= s.server_id %>/<%= s.port_id %>/"><%= s.label %></a></li>
+                <% end %>
+            </ul>
+        <% end %>
+        <script>
+           function gotoWS(url, usr, passwd) {
+               var client = new XMLHttpRequest();
+               client.open("GET", url, false, usr, passwd);
+               client.send();
+               if (client.status == 200) {
+                   // open it here.
+                   //document.location = url;
+                   // open in a new tab
+                   window.open(url, "_blank");
+                   //client.open("GET", url, false, "1","1");
+                   //client.send();
+               } else if (client.status == 404) {
+                   alert("Loading workspace error! the workspace does not exit!");
+               } else  {
+                   alert(client.status);
+                   alert("Loading workspace error! Incorrect username/password.");
+               }
+           }
+        </script>
+    <% end %>
+<% end template %>
+
+<% template sample_list(content::sample_list &keys) %>
+    <!-- sample list -->
+    <% foreach s in keys %>
+        <ul>
+            <% item %>
+                <li><a href="/a/<%= s.key %>"><%= s.name %></a></li>
+            <% end %>
+        </ul>
+    <% end %>
+<% end template %>
+
+
+<% template stripe_button(std::string email, std::string amount, std::string public_key, std::string login_url) %>
+    <% if email.empty() %>
+        <a class="btn btn-cta btn-cta-primary" href=<%= login_url %>>Buy now</a>
+    <% else %>
+      <form action="/charge" method="post">
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key= <%= public_key %>
+                data-description="Access for a year"
+                data-amount=<%= amount %>
+                data-locale="auto">
+        </script>
+      </form>
+     <% end %>
+<% end template %>
+
+
+
+<% end view %>
+<% end skin %>

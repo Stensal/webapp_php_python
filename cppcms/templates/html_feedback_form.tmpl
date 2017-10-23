@@ -1,0 +1,17 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_feedback_form uses content::user_configure extends html_with_session_view %>
+
+<% template external_assets() %>
+<script src="/static/js/jquery_2_1_1.js"></script>
+<% end template %>
+
+<% template header() %>
+<% end template %>
+
+<% template main_area() %>
+  <% include feedback_popup ("") %>
+<% end template %>
+
+<% end view %>
+<% end skin %>

@@ -1,0 +1,26 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_form uses content::user_configure extends html_view %>
+
+
+<% template body() %>
+<body onload="stensalui_body_onload();">
+    <script>function stensalui_body_onload() {/* the default one is noop */};</script>
+    <% include main_area() %>
+</body>
+<% end template %>
+
+
+<% template global_assets() %>
+<!-- global_assets -->
+<% end template %>
+
+
+<% template header() %>
+<% end template %>
+
+<% template feedback() %>
+<% end template %>
+
+<% end view %>
+<% end skin %>

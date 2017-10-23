@@ -1,0 +1,58 @@
+<% c++ #include "nojs_root.h" %>
+<% xhtml %>
+<% skin kennel %>
+<% view abstract_view uses content::configure extends all_components %>
+
+<% template render() %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--><html lang="en"> <!--<![endif]-->
+  <% if initialized_by_app %>
+    <!-- html_area -->
+      <% include html_area()%>
+  <% else %>
+      <body><p>initialization error</p></body>
+  <% end %>
+</html>
+<% end template %>
+
+
+<% template html_area() %>
+  <!-- head -->
+  <% include head () %>
+  <!-- body -->
+  <% include body () %>
+<% end template %>
+
+
+<% template meta() %>
+  <!-- meta(abstract_view) -->
+<% end template %>
+
+<% template global_assets() %>
+   <!-- include global asserts -->
+<% end template %>
+
+<% template external_assets() %>
+<!-- include extenal asserts -->
+<% end template %>
+
+<% template head() %> = 0
+<head>
+<!-- please override head() -->
+</head>
+<% end template %>
+
+
+<% template body() %>
+<body>
+<!-- please override body() -->
+</body>
+<% end template %>
+
+
+<% end view %>
+<% end skin %>

@@ -1,0 +1,21 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_workspace_view uses content::workspace_list extends html_with_session_view %>
+
+
+<% template external_assets() %>
+  <!-- external assets -->
+  <script src="/static/js/jquery_2_1_1.js"></script>
+<% end template %>
+
+
+<% template main_area() %>
+<p>Private workspaces provide a Linux x86 environment to build complex C/C++ source code.</p>
+<div id="workspace-list">
+<% include workspace_link_list(list) %>
+</div>
+<% include feedback_popup (login_info.name) %>
+<% end template %>
+
+<% end view %>
+<% end skin %>

@@ -1,0 +1,42 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_compile_view uses content::nojs_root extends html_with_session_component_view %>
+
+<% template external_assets() %>
+<link rel="stylesheet" href="/static/css/online_demo.css"/>
+<% end template %>
+
+<% template header() %>
+<% end template %>
+
+<% template main_area() %>
+  <% include runner_console() %>
+<% end template %>
+
+
+
+<% template runner_console() %>
+  <% if (!content.compiler_message().empty()) %>
+  <div>
+    <p><label>compiler output:</label></p>
+    <p>
+       <textarea class="demo_stdout" rows="10" cols="78">
+         <%= compiler_message() %>
+       </textarea>
+    </p>
+  </div>
+  <% end if %>
+  <% if (!content.program_message().empty()) %>
+  <div>
+    <p><label>program output:</label></p>
+    <p>
+      <textarea class="demo_stdout" rows="10" cols="78">
+        <%= program_message() %>
+      </textarea>
+    </p>
+  </div>
+  <% end if %>
+<% end template %>
+
+<% end view %>
+<% end skin %>

@@ -1,0 +1,155 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_term_view uses content::nojs_root extends html_with_session_view %>
+
+
+<% template external_assets() %>
+<!-- extra_assets -->
+<link rel="stylesheet" href="/static/js/xterm/xterm.css"/>
+<link rel="stylesheet" href="/static/css/ttyd.css"/>
+<script src="/static/js/xterm/xterm.js"></script>
+<script src="/static/js/utf8.js"></script>
+<script src="/static/js/overlay.js"></script>
+<script src="/static/js/xterm/addons/fit/fit.js"></script>
+<script src="/static/js/xterm/addons/attach/attach.js" ></script>
+<script src="/static/js/xterm/addons/fit/fit.js" ></script>
+<script src="/static/js/xterm/addons/fullscreen/fullscreen.js" ></script>
+<% end template %>
+
+
+<% template main_area() %>
+<% if is_login() %>
+<% include terminal() %>
+<% end %>
+<% end template %>
+
+<% template terminal() %>
+<div>
+<noscript>
+<style type="text/css">
+    .pagecontainer {display:none;}
+</style>
+<div class="noscriptmsg">
+    You don't have javascript enabled. Terminal needs Javascript.
+</div>
+</noscript>
+<div id="terminal-container"></div>
+</div>
+<script>
+(function() {
+    var terminalContainer = document.getElementById('terminal-container'),
+        httpsEnabled = window.location.protocol === "https:",
+        url = (httpsEnabled ? 'wss://' : 'ws://') + window.location.host + '/ws',
+        authToken = (typeof tty_auth_token !== 'undefined') ? tty_auth_token : null,
+        protocols = ["tty"],
+        autoReconnect = -1,
+        term, pingTimer, wsError;
+
+    var openWs = function() {
+        var ws = new WebSocket(url, protocols);
+        var unloadCallback = function(event) {
+            var message = 'Close terminal? this will also terminate the command.';
+            (event || window.event).returnValue = message;
+            return message;
+        };
+
+        ws.onopen = function(event) {
+            console.log("Websocket connection opened");
+            wsError = false;
+            ws.send(JSON.stringify({AuthToken: authToken}));
+            pingTimer = setInterval(sendPing, 30 * 1000, ws);
+
+            if (typeof term !== 'undefined') {
+                term.destroy();
+            }
+
+            term = new Terminal();
+
+            term.on('resize', function(size) {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send("2" + JSON.stringify({columns: size.cols, rows: size.rows}));
+                }
+                setTimeout(function() {
+                    term.showOverlay(size.cols + 'x' + size.rows);
+                }, 500);
+            });
+
+            term.on("data", function(data) {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send("0" + data);
+                }
+            });
+
+            term.on('open', function() {
+                // https://stackoverflow.com/a/27923937/1727928
+                window.addEventListener('resize', function() {
+                    clearTimeout(window.resizedFinished);
+                    window.resizedFinished = setTimeout(function () {
+                        term.fit();
+                    }, 250);
+                });
+                window.addEventListener('beforeunload', unloadCallback);
+                term.fit();
+            });
+
+            while (terminalContainer.firstChild) {
+                terminalContainer.removeChild(terminalContainer.firstChild);
+            }
+
+            term.open(terminalContainer, true);
+        };
+
+        ws.onmessage = function(event) {
+            var data = event.data.slice(1);
+            switch(event.data[0]) {
+                case '0':
+                    term.writeUTF8(window.atob(data));
+                    break;
+                case '1': // pong
+                    break;
+                case '2':
+                    document.title = data;
+                    break;
+                case '3':
+                    var preferences = JSON.parse(data);
+                    Object.keys(preferences).forEach(function(key) {
+                        console.log("Setting " + key + ": " +  preferences[key]);
+                        term.setOption(key, preferences[key]);
+                    });
+                    break;
+                case '4':
+                    autoReconnect = JSON.parse(data);
+                    console.log("Enabling reconnect: " + autoReconnect + " seconds");
+                    break;
+            }
+        };
+
+        ws.onclose = function(event) {
+            console.log("Websocket connection closed with code: " + event.code);
+            if (term) {
+                term.off('data');
+                term.off('resize');
+                if (!wsError) {
+                    term.showOverlay("Connection Closed", null);
+                }
+            }
+            window.removeEventListener('beforeunload', unloadCallback);
+            clearInterval(pingTimer);
+            // 1000: CLOSE_NORMAL
+            if (event.code !== 1000 && autoReconnect > 0) {
+                setTimeout(openWs, autoReconnect * 1000);
+            }
+        };
+    };
+
+    var sendPing = function(ws) {
+        ws.send("1");
+    };
+
+    openWs();
+})();
+</script>
+<% end template %>
+
+<% end view %>
+<% end skin %>

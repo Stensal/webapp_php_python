@@ -1,0 +1,41 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_compilation_view uses content::compilation_reponse_data extends html_with_session_view %>
+
+<% template external_assets() %>
+<link rel="stylesheet" href="/static/css/online_demo.css"/>
+<% end template %>
+
+<% template header() %>
+<% end template %>
+
+<% template main_area() %>
+  <% include dts_runner() %>
+<% end template %>
+
+<% template dts_runner() %>
+  <!-- this is the response to a POST: /compile -->
+    <!-- the POST is from an standalone form, this should only appear in a testing environment. -->
+    <% if (!content.compiler_message.empty()) %>
+    <div>
+    <p><label>compiler output:</label></p>
+    <p>
+       <textarea id="compiler_message" class="demo_stdout"
+                 readonly cols="75" rows="10"><%= compiler_message %></textarea>
+    </p>
+    </div>
+    <% end %>
+    <% if (!content.program_outputs.empty()) %>
+    <div>
+      <p><label>program output:</label></p>
+      <p>
+        <textarea id="program_message" class="demo_stdout"
+                  readonly
+                  cols="75" rows="10"><%= program_outputs %></textarea>
+      </p>
+    </div>
+  <% end %>
+<% end template %>
+
+<% end view %>
+<% end skin %>

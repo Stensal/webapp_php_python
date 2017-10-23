@@ -1,0 +1,42 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_permlink_form uses content::compilation_reponse_data extends html_with_session_form %>
+
+<% template external_assets() %>
+<% end template %>
+
+<% template header() %>
+<% end template %>
+
+<% template main_area() %>
+  <% include create_permlink() %>
+<% end template %>
+
+
+
+<% template create_permlink() %>
+  <form action='<% url "create-permlink" %>' method="POST" onsubmit="mysubmit()">
+    <input type="hidden" name="compiler" value="<%= compiler_name %>"></input>
+    <input type="hidden" id="compiler_input" name="code" value='<%= compiler_input %>'></input>
+    <input type="hidden" id="sdtin_input" name="stdin" value='<%= program_input %>'></input>
+    <input type="hidden" id="compiler_output" name="compiler_output" value='<%= compiler_message %>'></input>
+    <input type="hidden" id="program_output" name="outputs" value='<%= program_outputs %>'></input>
+    <input type="submit" value="Share"></input>
+  </form>
+  <script>
+     function mysubmit () {
+         if (window.parent != undefined) {
+
+             if (window.parent.setCompilerInput != undefined) {
+                 window.parent.setCompilerInput();
+             }
+             if (window.parent.setExeInput != undefined) {
+                 window.parent.setExeInput();
+             }
+         }
+     }
+  </script>
+<% end template %>
+
+<% end view %>
+<% end skin %>

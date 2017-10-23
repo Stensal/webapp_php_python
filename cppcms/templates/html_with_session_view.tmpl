@@ -1,0 +1,54 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_view uses content::user_configure extends html_view %>
+
+
+<% template global_assets() %>
+<!-- global_assets -->
+<link rel="stylesheet" href="/static/css/font-awesome.css"/>
+<link rel="stylesheet" href="/static/purecss_1_0_0/base.css"/>
+<link rel="stylesheet" href="/static/purecss_1_0_0/grids.css"/>
+<link rel="stylesheet" href="/static/purecss_1_0_0/grids-responsive.css"/>
+<link rel="stylesheet" href="/static/purecss_1_0_0/menus.css"/>
+<link rel="stylesheet" href="/static/purecss_1_0_0/buttons.css"/>
+<link rel="stylesheet" href="/static/css/stensal.css"/>
+<style>
+
+</style>
+<% end template %>
+
+
+<% template header() %>
+    <div class="pure-menu pure-menu-horizontal">
+        <a class="pure-menu-heading pure-menu-link" href='<% url "get-root" %>'>Stensal</a>
+        <ul class="pure-menu-list">
+            <% if is_login() %>
+                <% if is_stensal_employee() %>
+                    <li class="pure-menu-item">
+                        <a class="pure-menu-link" href='/jenkins/'>Jenkins</a>
+                    </li>
+                <% end %>
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href='<% url "get-workspace-list" %>'>Workspace</a>
+                </li>
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href='<% url "nojs-get-signout" %>'>Sign out</a>
+                </li>
+            <% else %>
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="<%= login_url %>">Sign in</a>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+<% end template %>
+
+
+<% template footer() %>
+    <div class="stensal_footer stensal_is_center">
+       <a class="stensal_link" href="/static/html/privacy.html">Privacy</a>
+    </div>
+<% end template %>
+
+<% end view %>
+<% end skin %>

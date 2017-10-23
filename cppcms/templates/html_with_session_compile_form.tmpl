@@ -1,0 +1,49 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_with_session_compile_form uses content::compile_job_post_data extends html_with_session_form %>
+
+<% template external_assets() %>
+<link rel="stylesheet" href="/static/css/online_demo.css"/>
+<% end template %>
+
+<% template header() %>
+<% end template %>
+
+<% template main_area() %>
+  <% include dts_runner() %>
+<% end template %>
+
+<% template dts_runner() %>
+  <form action='<% url "post-compile" %>' method='POST' onsubmit='prepost()'>
+    <input type='hidden' name='compiler' value='<%= compiler_name %>'/>
+    <input type='hidden' id='compiler_input' name='code'
+       value='int main () { printf ("the compiler input is not provided. The default code is used.\n"); return 0; }'/>
+    <input type='hidden' id='stdin' name='stdin' value=''/>
+    <input type='hidden' id='iframed' name='iframed' value='false'/>
+    <input type='submit' value="Run"/>
+  </form>
+  <script>
+     function prepost () {
+         if (window.parent != undefined) {
+             // tell the server this post is from an iframed form
+             document.getElementById("iframed").value = "true";
+
+             // setup the real input for this post
+             var code = window.parent.get_code();
+             document.getElementById("compiler_input").value = code;
+
+             var v = window.parent.get_stdin();
+             document.getElementById("stdin").value = v;
+         }
+     }
+     function stensalui_body_on_load() {
+     }
+  </script>
+  <% if ( !content.return_key.empty() ) %>
+    <!-- the return key value of the post -->
+    <input type="hidden" id="return_key" name="return_key" value="<%= return_key %>"/>
+  <% end %>
+<% end template %>
+
+<% end view %>
+<% end skin %>

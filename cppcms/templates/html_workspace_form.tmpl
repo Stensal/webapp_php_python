@@ -1,0 +1,14 @@
+<% c++ #include "nojs_root.h" %>
+<% skin kennel %>
+<% view html_workspace_form uses content::workspace_list extends html_with_session_view %>
+
+<% template header() %>
+<% end template %>
+
+
+<% template main_area() %>
+   <% include workspace_link_list (list) %>
+<% end template %>
+
+<% end view %>
+<% end skin %>
