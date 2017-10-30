@@ -3,7 +3,8 @@ LABEL Maintainer1="Ning <ning@stensalinc.com>"
 
 RUN apt-get update
 RUN apt-get install -y nginx-full \
-    && apt-get install -y php5 php5-fpm php5-cgi php5-xdebug
+    && apt-get install -y php5 php5-fpm php5-cgi php5-xdebug php5-mysql
+
 
 COPY bin/cppcms_api.so /usr/lib/php5/20131226/
 COPY cppcms_api.ini /etc/php5/mods-available/
