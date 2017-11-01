@@ -13,6 +13,9 @@ RUN  cd /etc/php5/fpm/conf.d \
 COPY php.nginx /etc/nginx/sites-enabled/
 
 COPY wwwtest/ /var/www/html/
+COPY phpbb/   /var/www/html/forum/
+RUN mkdir -p /cache/production \
+    && chown -R www-data:www-data /cache/production
 
 COPY entrypoint.sh /usr/bin/entrypoint.sh 
 
