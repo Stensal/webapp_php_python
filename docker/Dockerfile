@@ -3,7 +3,7 @@ LABEL Maintainer1="Ning <ning@stensalinc.com>"
 
 RUN apt-get update
 RUN apt-get install -y nginx-full \
-    && apt-get install -y php5 php5-fpm php5-cgi php5-xdebug php5-mysql
+    && apt-get install -y php5 php5-fpm php5-cgi php5-xdebug php5-curl php5-mysql
 
 COPY bin/cppcms_api.so /usr/lib/php5/20131226/
 COPY cppcms_api.ini /etc/php5/mods-available/
@@ -14,6 +14,8 @@ COPY php.nginx /etc/nginx/sites-enabled/
 
 COPY wwwtest/ /var/www/html/
 
-COPY entrypoint.sh /usr/bin/entrypoint.sh 
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+
+VOLUME /var/www/html/forum
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]

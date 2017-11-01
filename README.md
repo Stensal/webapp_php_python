@@ -61,6 +61,7 @@ db_port: 3306
 4. run web server stensal
     ```
     docker run --name stensal_web -it \
+    -v /var/www/webroot/stensal/webapp_php/docker/wwwtest:/var/www/html \
     -v /var/www/webroot/stensal/webapp_php/phpbb:/var/www/html/forum \
     --link forumdb:mysql \
     -p 8000:8000 stensal /bin/bash
