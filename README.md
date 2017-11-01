@@ -26,7 +26,7 @@ db_port: 3306
     docker image build -t stensal .
     ```
 
-3. *Get some paths on system. eg., for me the phpbb path is: '/var/www/webroot/stensal/webapp_php/phpbb'*
+3. *Get some paths on system. eg., for me the phpbb code path is: '/var/www/webroot/stensal/webapp_php/phpbb'*
 
     ```bash
     project_phpbb_path: /var/www/webroot/stensal/webapp_php/phpbb
@@ -55,7 +55,7 @@ db_port: 3306
     ```
 3. import database from a db snap file under mysql/db_backups directory
     ```bash
-    source /var/www/webroot/stensal/webapp_php/mysql
+    source /var/www/webroot/stensal/webapp_php/mysql/db_backups/stensal_forum.sql
     ```
 
 4. run web server stensal
@@ -65,6 +65,7 @@ db_port: 3306
     --link forumdb:mysql \
     -p 8000:8000 stensal /bin/bash
     ```
+5. open http://localhost:8000/forum in a browser.
     
 #### FAQ
 1. **get ip of mysql server**
