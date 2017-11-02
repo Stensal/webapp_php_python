@@ -5,9 +5,6 @@ function get($key, $default=NULL) {
 }
 
 class githubAuth{
-    const OAUTH2_CLIENT_ID = '37235333098e7532b656';
-    const OAUTH2_CLIENT_SECRET = 'afb0bd3e89a87fc060c5e4060954264d47656ab9';
-
     protected $authorizeURL = 'https://github.com/login/oauth/authorize';
     protected $tokenURL = 'https://github.com/login/oauth/access_token';
     protected $apiURLBase = 'https://api.github.com/';
