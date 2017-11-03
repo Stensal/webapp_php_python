@@ -8,6 +8,7 @@ services:
         links:
             - db
         volumes:
+            - ./docker/wwwtest:/var/www/html/
             - ./docker/phpbb:/var/www/html/forum
         tty: true
     db:
