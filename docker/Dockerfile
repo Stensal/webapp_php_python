@@ -11,14 +11,17 @@ RUN  cd /etc/php5/fpm/conf.d \
      && ln -s ../../mods-available/cppcms_api.ini 30-cppcms_api.ini
 
 COPY php.nginx /etc/nginx/sites-enabled/
+COPY php.ini /etc/php5/fpm/php.ini
 
 COPY wwwtest/ /var/www/html/
 COPY phpbb/   /var/www/html/forum/
-RUN mkdir -p /cache/production \
-    && chown -R www-data:www-data /cache/production
-
-COPY entrypoint.sh /usr/bin/entrypoint.sh
+RUN mkdir -p /var/www/html/forum/cache/production \
+    && chown -R www-data:www-data /var/www/html/forum/cache/production
 
 VOLUME /var/www/html/forum
 
-ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+ENTRYPOINT nginx && service php5-fpm start && /bin/bash
+
+CMD ["true"]
+
+EXPOSE 8000

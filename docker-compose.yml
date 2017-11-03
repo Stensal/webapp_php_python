@@ -1,0 +1,21 @@
+version: "2"
+services:
+    web:
+        build: ./docker/
+        container_name: stensal_web
+        ports:
+            - "8000:8000"
+        links:
+            - db
+        volumes:
+            - ./docker/phpbb:/var/www/html/forum
+        tty: true
+    db:
+        build: ./mysql/
+        container_name: stensal_db
+        ports:
+            - "3307:3306"
+        restart: always
+        environment:
+            MYSQL_DATABASE: phpbb
+            MYSQL_ROOT_PASSWORD: 9j5H2o7epb4Y
