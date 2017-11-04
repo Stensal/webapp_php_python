@@ -2,9 +2,9 @@
 // phpBB 3.2.x auto-generated configuration file
 // Do not change anything in this file!
 $dbms = 'phpbb\\db\\driver\\mysqli';
-$dbhost = '172.17.0.1';
+$dbhost = 'db';
 $dbport = '3306';
-$dbname = 'stensal_forum';
+$dbname = 'phpbb';
 $dbuser = 'root';
 $dbpasswd = '9j5H2o7epb4Y';
 $table_prefix = 'phpbb_';
