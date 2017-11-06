@@ -1,0 +1,738 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"><!--<![endif]--><!-- html_area --><!-- head --><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    
+     <meta name="referrer" content="no-referrer">
+     <meta name="description" content="Stensal C and C++ - a memory safer implementation of C and C++">
+     <meta name="keywords" content="Stensal Inc, Stensal, segmentation fault, core dump, buffer overrun, buffer overflow,
+           user after free, double free, security, safety, memory safety, type safety, C, C++, CPP, malloc, free, mmap, crash, SIGSEGV, crash">
+  
+    
+<!-- global_assets -->
+<link rel="stylesheet" href="demo_files/font-awesome.css">
+<link rel="stylesheet" href="demo_files/base.css">
+<link rel="stylesheet" href="demo_files/grids.css">
+<link rel="stylesheet" href="demo_files/grids-responsive.css">
+<link rel="stylesheet" href="demo_files/menus.css">
+<link rel="stylesheet" href="demo_files/buttons.css">
+<link rel="stylesheet" href="demo_files/stensal.css">
+<style>
+
+</style>
+
+    
+    <script src="demo_files/PostEventSource.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="demo_files/ansi_up.js" type="text/javascript" charset="UTF-8"></script>
+    <link rel="stylesheet" href="demo_files/menus.css">
+
+    <link rel="stylesheet" href="demo_files/codemirror.css">
+    <link rel="stylesheet" href="demo_files/dialog.css">
+
+    <script src="demo_files/jquery_2_1_1.js"></script>
+    <script src="demo_files/codemirror.js"></script>
+    <script src="demo_files/simple.js"></script>
+    <script src="demo_files/searchcursor.js"></script>
+    <script src="demo_files/matchbrackets.js"></script>
+    <script src="demo_files/dialog.js"></script>
+    <script src="demo_files/placeholder.js"></script>
+    <script src="demo_files/clike.js"></script>
+    <script src="demo_files/vue.js"></script>
+    <script>
+        var URL_COMPILE = '/rest/sse/compile';
+        var URL_POST_PERMLINK = '/rest/permlink';
+        var URL_GET_PERMLINK = '/a';
+        
+            function default_model () {
+                return {
+                    lang: "C",
+                    source_code: "",
+                    cli_arguments: "",
+                    stdin: "",
+                    console_messages: [],
+                    job_completion: "",
+                    context_reference : "",
+                };
+            }
+        
+        var model = default_model ();
+    </script>
+    <script src="demo_files/home.js" type="text/javascript" charset="UTF-8"></script>
+   <style>
+     .src-line-info {
+       color: yellow;
+     }
+
+     .floating_panel {
+         position: fixed;
+         top: 12%;
+     }
+     .h1_title {
+         text-align: center;
+         color: grey;
+         font-size: 150%;
+     }
+   </style>
+  
+</head>
+
+  <!-- body -->
+  
+<body onload="stensalui_body_onload();" onresize="stensalui_body_onresize();">
+<script>
+    var stensalui_body_onload = function () {}
+    var stensalui_body_onresize = function () {}
+    var get_model = null;
+</script>
+    <!-- header -->
+    
+    <div class="pure-menu pure-menu-horizontal">
+        <a class="pure-menu-heading pure-menu-link" href="http://localhost:3000/">Stensal</a>
+        <ul class="pure-menu-list">
+            
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="https://github.com/login/oauth/authorize?scope=user:email&amp;client_id=ed031ca7c88f4dda0743">Sign in</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <!-- main_area -->
+    
+    <p class="h1_title">Catch extensive memory issues in C/C++ code</p>
+    <div class="pure-g">
+        <div class="l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
+
+    <div id="editor_root">
+      <div class="pure-menu pure-menu-horizontal">
+          <ul class="pure-menu-list">
+              
+                  <li class="pure-menu-item">
+                      <button class="button-xsmall pure-button pure-button-primary"
+                              onclick="restoreToDefault();">Reset</button>
+                  </li>
+                  <li class="pure-menu-item pure-menu-has-children">
+                      <button class="button-xsmall pure-button pure-button-primary"
+                              v-on:click="loadusage">Usage sample</button>
+                  </li>
+                  <li class="pure-menu-item">
+                      <label for="context_reference">Reference URL</label>
+                      <input id="context_reference" type="text" name="context_reference"
+                                v-model="context_reference"
+                      ></input>
+                  </li>
+              
+          </ul>
+      </div>
+      <textarea id="code_editor" placeholder="Code goes here..."></textarea>
+    </div>
+    <script>
+      // model -> ui
+      var editor_vue = new Vue ({
+          el: "#editor_root",
+          data : {
+              context_reference : "",
+          },
+          methods : {
+              populate : function (m) {
+                  code_editor.setValue(m.source_code);
+                  this.context_reference = m.context_reference;
+              },
+              loadusage: function () {
+                  model = usage_model();
+                  populate_model_to_vues();
+              },
+              retrieve_model : function () {
+                  model.source_code = code_editor.getValue();
+                  model.context_reference = this.context_reference;
+              }
+          }
+      });
+
+      var editor = document.querySelector("#code_editor");
+      var code_editor = CodeMirror.fromTextArea(editor, {
+          lineNumbers: true,
+          viewportMargin: Infinity,
+          theme: 'default',
+          indentUnit: 4,
+          keyMap: "default",
+          matchBrackets: true,
+          mode : "text/x-c++src",
+          lineWrapping : true,
+          styleActiveLine: true,
+      });
+
+      var activatedLine = -1;
+      function highlightLine(lineNumber) {
+          //Line number is zero based index
+          var actualLineNumber = lineNumber - 1;
+          if (activatedLine > 0) {
+              code_editor.removeLineClass(activatedLine, 'wrap', 'line-error');
+          }
+          activatedLine = actualLineNumber;
+          code_editor.addLineClass(activatedLine, 'wrap', 'line-error');
+          var height = code_editor.heightAtLine(activatedLine, "page");
+          window.scrollTo(0, height);
+          return false;
+      }
+    </script>
+    <style type="text/css">
+      .line-error {
+          background: yellow;
+      }
+      #editor_root .CodeMirror {
+        border: 1px solid black;
+        font-size:13px;
+        height: auto;
+        min-height: 500px;
+      }
+      #editor_root .CodeMirror-scroll {
+        min-height: 500px;
+        overflow-y: hidden;
+        overflow-x: auto;
+      }
+    </style>
+  
+        </div>
+        <div class="l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
+            <div class="pure-g">
+                <div id="fpanel1" class="l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2 floating_panel">
+                    
+    <div id="program_input" class="pure-g">
+      <div class="padded-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
+        <label for="cli_arguments">Program Arguments</label>
+        <textarea id="cli_arguments" rows="2"
+                  v-model="cli_arguments"></textarea>
+      </div>
+      <div class="padded-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
+        <label for="vue_stdin">stdin</label>
+        <textarea id="vue_stdin" rows="2"
+                  v-model="stdin"
+                  placeholder='if your code takes data from stdin, such as scanf("%d", &amp;i), please type data here.'></textarea>
+      </div>
+    </div>
+    <script>
+      // bindirection data bindings
+      // model <-> ui
+      var prog_input_vue = new Vue({
+          el: "#program_input",
+          data: {
+              cli_arguments : "",
+              stdin : "",
+          },
+          methods : {
+              populate : function (m) {
+                  this.cli_arguments = m.cli_arguments;
+                  this.stdin = m.stdin;
+              }
+          }
+      });
+      // propogate the values to execution panel display only
+      prog_input_vue.$watch('cli_arguments', function (nv, ov) {
+          execution_panel_vue.$data.cli_arguments = nv;
+      });
+      prog_input_vue.$watch('stdin', function (nv, ov) {
+          if (nv == "")
+              execution_panel_vue.$data.stdin_pipe = "";
+          else
+              execution_panel_vue.$data.stdin_pipe = "echo \"" + nv + "\" |";
+      });
+    </script>
+    <style>
+      #program_input .padded-box {
+        padding-bottom: 5px;
+      }
+      #program_input boxsizingBorder {
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+      }
+      #program_input textarea {
+          width: 94%;
+          resize: vertical;
+          border-style: solid;
+          border: 1px solid black;
+          font-size: 13px;
+      }
+      #program_input label {
+          color: rgb(0, 120, 231);
+          font-size: 13px;
+      }
+    </style>
+
+    <div id="execution_panel">
+      <div class="pure-g">
+          <div class="pure-u-5-24">
+              <label class="blue_text stensal_label">Commands:</label>
+          </div>
+          <div id="batch_job" class="blue_text stensal_label pure-u-19-24">
+              <code>
+              {{compiler}} {{compilation_arguments}} -o prog<br/>
+              {{stdin_pipe}} prog {{cli_arguments}}<br/>
+              </code>
+          </div>
+      </div>
+      <div class="tb-box pure-form pure-g">
+          <div id="submit_job_root" class="pure-u-1-1 pure-u-sm-4-24 pure-u-md-4-24">
+              <button id="stensal-compile"
+                      class="button-xsmall pure-button pure-button-primary"
+                      onclick="submit_code()">Run As</button>
+              <img id="stensal-compiling" src="/static/images/compiling.gif" alt="Compiling"
+                   style="display:none"/>
+          </div>
+          <div class="pure-u-1-1 pure-u-sm-3-24 pure-u-md-3-24">
+              <label for="option-c" class="pure-radio blue_text stensal_is_center stensal_label">
+                  <input id="option-c" type="radio" name="langOptions"
+                         value="C"
+                         onchange="selectC();"
+                         checked>C</label>
+          </div>
+          <div class="pure-u-1-1 pure-u-sm-3-24 pure-u-md-3-24">
+              <label for="option-cpp" class="pure-radio blue_text stensal_is_center  stensal_label">
+                  <input id="option-cpp" type="radio" name="langOptions"
+                         onchange="selectCpp();"
+                         value="C++">C++</label>
+          </div>
+      </div>
+      <div id="console_panel">
+        <div class="pure-menu pure-menu-horizontal">
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item">
+                    <button class="button-xsmall pure-button pure-button-primary"
+                            onclick="clear_console();">Clear Console</button>
+                </li>
+                <li class="pure-menu-item">
+                    <button id="share_this_btn" class="button-xsmall pure-button pure-button-primary"
+                            onclick="shareCode()"
+                            style="display: none">Share</button>
+                    <a id="shared_url" v-bind:href="permlink" style="display:none">{{ host }}{{ permlink }}</a>
+                </li>
+            </ul>
+        </div>
+        <div id="result-container" class="pure-g">
+          <div class="l-box pure-u-1 pure-u-sm-u-1 pure-u-md-u-1">
+            <div id="console_display" class="console_display_class"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      display_ready_compiling();
+      hide_sharing();
+
+      function submit_code() {
+          clear_console();
+          display_compiling();
+          retrieve_model_from_ui();
+          if (model.source_code == "") {
+              var data =
+                  [{ type : "Control",
+                      message : "Start"
+                  }, { type : "CompilerMessageE",
+                      message : "Please provide source code."
+                  }, { type : "Control",
+                      message : "Finished"
+                  },
+                  ];
+              populate_result(data);
+              display_ready_compiling();
+          } else {
+              post_code(model.lang, model.source_code, [], model.cli_arguments,
+                  model.stdin,
+                  model.context_reference,
+                  function () {
+                      display_ready_compiling();
+                      display_share_this();
+                  });
+          }
+      }
+      // data binding direction
+      // execution_panel_vue -> ui
+      var execution_panel_vue = new Vue ({
+        el: "#execution_panel",
+        data : {
+            run_as_lang : "C",
+            compiler: "",
+            compilation_arguments: "",
+            cli_arguments: "",
+            stdin_pipe : "",
+            batch_job : "",
+            permlink : "",
+            permlink_name : "",
+            host : (window.location.protocol === "https:" ?
+                'https://' : 'http://') + window.location.host,
+            console_messages : [],
+            job_completion : "",
+        },
+        methods : {
+            populate : function (m) {
+                this.run_as_lang = m.lang;
+                if (m.lang == "C") {
+                    this.compiler = "stensal-clang";
+                    this.compilation_arguments = "prog.c";
+                    var e = document.querySelector("#option-c");
+                    e.checked = true;
+                } else {
+                    this.compiler = "stensal-clang++";
+                    this.compilation_arguments = "prog.cc";
+                    var e = document.querySelector("#option-cpp");
+                    e.checked = true;
+                }
+                this.console_messages = m.console_messages;
+                this.job_completion = m.job_completion;
+                document.querySelector("#console_display").innerHTML = null;
+                populate_result(this.console_messages);
+                if (this.job_completion != "")
+                    display_share_this();
+            },
+            retrieve_model :  function () {
+                model.console_messages = this.console_messages;
+                model.job_completion = this.job_completion;
+                model.lang = this.run_as_lang;
+            }
+        }
+      });
+
+      function selectC() {
+          execution_panel_vue.$data.run_as_lang = "C";
+          execution_panel_vue.$data.compiler = "stensal-clang";
+          execution_panel_vue.$data.compilation_arguments = "prog.c";
+      }
+
+      function selectCpp() {
+          execution_panel_vue.$data.run_as_lang = "C++";
+          execution_panel_vue.$data.compiler = "stensal-clang++";
+          execution_panel_vue.$data.compilation_arguments = "prog.cc";
+      }
+
+      function clear_console () {
+          document.querySelector("#console_display").innerHTML = null;
+          execution_panel_vue.$data.console_messages = [];
+          execution_panel_vue.$data.job_completion = "";
+          hide_sharing();
+      }
+
+      function shareCode () {
+          retrieve_model_from_ui();
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', URL_POST_PERMLINK, true);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onreadystatechange = function () {
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                  var json = JSON.parse(xhr.responseText);
+                  // we get the permlink url;
+                  if (json.permlink != undefined) {
+                      execution_panel_vue.$data.permlink_name = json.permlink;
+                      execution_panel_vue.$data.permlink = URL_GET_PERMLINK + "/" + json.permlink;
+                      execution_panel_vue.$data.job_completion = "";
+                      display_shared_url();
+                  }
+              }
+              if (xhr.status != 200) {
+                  console.log("invalid job id");
+              }
+          };
+          xhr.send(JSON.stringify(
+              { job_completed : model.job_completion,
+                  context_reference : model.context_reference,
+              }));
+      }
+    </script>
+    <style>
+      .blue_text {
+          color: rgb(0, 120, 231);
+          font-size: 13px;
+      }
+      #result-container {
+        overflow: hidden;
+        background-color: #ddd;
+      }
+      .console_display_class {
+        margin: 0px;
+
+        background-color: #000000;
+        height: 325px;
+        overflow-y: scroll;
+      }
+      .console_display_class pre {
+        margin: 0px 0px 10px;
+        padding: 0px;
+
+        background-color: #000000;
+        color: #ffffff;
+        border: 0px;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+      }
+      .console_display_class .CompilerMessageE {
+        color: #ff0000;
+      }
+      .console_display_class .StdOut {
+      }
+      .console_display_class .Control {
+        color: #00ff00;
+      }
+      .console_display_class .Signal {
+        color: #ff0000;
+      }
+      .console_display_class .ExitCode {
+        color: #ff00ff;
+      }
+      .expand .console_display_class {
+        min-height: 300px;
+        height: auto;
+      }
+      .nowrap .console_display_class pre {
+        word-wrap: normal;
+      }
+      #execution_panel .padded-box {
+          padding-left: 1em;
+          padding-right: 1em;
+      }
+    </style>
+  
+                    
+    <div id="sample_panel">
+        <div class="pure-g">
+            <div class="pure-u-1-2">
+                <p class="h1_title">More samples</p>
+                
+    <!-- sample list -->
+    
+        <ul>
+            
+                <li><a href="http://localhost:3000/a/buffer_overrun_write">buffer overrun (write)</a></li>
+            
+                <li><a href="http://localhost:3000/a/HMLnTM4wMne7HlyB">buffer overrun to the lower addresses</a></li>
+            
+                <li><a href="http://localhost:3000/a/dereference_non_pointer">dereference non pointer</a></li>
+            
+        </ul>
+    
+
+            </div>
+        </div>
+    </div>
+  
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+      // pure model, no react
+      function reset_model () {
+          model = default_model();
+      }
+
+      var el = document.querySelector("#fpanel1");
+      stensalui_body_onresize = function () {
+          var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+          if (width >= 800) {
+              el.className = 'l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2 floating_panel';
+          } else {
+              el.className = 'l-box pure-u-1 pure-u-sm-1 pure-u-md-1';
+          }
+      }
+
+      get_model = function () {
+          return model;
+      }
+
+      function restoreToDefault () {
+          reset_model();
+          populate_model_to_vues();
+      }
+      
+      function restore_model () {
+          // restore model
+          var v = sessionStorage.getItem("model");
+          if (v != null) {
+              model = JSON.parse(v);
+              populate_model_to_vues();
+          }
+      }
+      
+      function persist_model() {
+          // persist the model;
+          retrieve_model_from_ui();
+          var str = JSON.stringify(model);
+          sessionStorage.setItem("model", str);
+      }
+      
+      function retrieve_model_from_ui () {
+          editor_vue.retrieve_model();
+          model.stdin = prog_input_vue.$data.stdin;
+          model.cli_arguments = prog_input_vue.$data.cli_arguments;
+          execution_panel_vue.retrieve_model();
+      }
+
+      function populate_model_to_vues () {
+          editor_vue.populate(model);
+          prog_input_vue.populate(model);
+          execution_panel_vue.populate(model);
+      }
+      // initialize the vues once in loading.
+      populate_model_to_vues();
+
+      
+          // the following logic make sure reload will not
+          // wipe out the data.
+          window.onload = function () {
+              restore_model();
+              stensalui_body_onresize();
+          }
+      
+      window.onbeforeunload = persist_model;
+    </script>
+    
+  <!-- feedback popup begin -->
+  <link rel="stylesheet" href="demo_files/feedback.css">
+  <link rel="stylesheet" href="demo_files/forms.css">
+  <button class="vertical-text pure-button button-small button-secondary" id="feedbackBtn">Contact us</button>
+  <!-- The Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="pure-g">
+        <div class="pure-u-23-24"></div>
+        <div class="pure-u-1-24">
+          <span class="close">×</span>
+        </div>
+      </div>
+        <form class="pure-form pure-form-aligned" action="/feedback" method="post" id="form">
+          <legend>Contact us</legend>
+          <fieldset>
+              
+                  <div class="pure-control-group">
+                      <label for="email">Your email:</label>
+                      <input id="email" name="email" placeholder="email" class="pure-input-1-2 form-control login-email" type="email">
+                      
+                  </div>
+              
+            <div class="pure-control-group">
+              <label for="subject">Subject:</label>
+              <select id="subject" class="pure-input-1-2">
+                <option selected="selected">Bug Report</option>
+                <option>Feature Request</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </fieldset>
+          <fieldset>
+            <textarea id="msg" name="message" rows="8" class="pure-input-1" placeholder="Message"></textarea>
+          </fieldset>
+          <fieldset>
+              <input id="notify_me" name="feedback_notification" checked="checked" type="checkbox">
+              <label for="feedback_notification">Notify me new features</label>
+          </fieldset>
+          <button id="submit_feedback" type="submit" class="pure-button button-secondary button-small">Send</button>
+        </form>
+    </div>
+  </div>
+
+  <div id="modal2" class="modal">
+    <div class="modal-content">
+      <span class="close" id="span2">×</span>
+      <h4></h4>
+    </div>
+  </div>
+  <script>
+    // Get the modal
+    var modal = document.getElementById('modal');
+    var modal2 = document.getElementById('modal2');
+    $("#form").submit(function(e){
+        var context = null;
+        if (get_model != null) {
+            context = get_model();
+        }
+        var sendInfo = {
+            email : document.querySelector("#email").value,
+            subject: document.querySelector("#subject").value,
+            message : document.querySelector("#msg").value,
+            support_context : context,
+            notify_me : document.querySelector("#notify_me").checked,
+        }
+
+        var postData = $(this).serializeArray();
+        var formURL = $(this).attr("action");
+        console.log(sendInfo);
+        if(sendInfo.message == ""){
+            alert ("Fill the message field!");
+            return false;
+        }
+        $.ajax(
+            {
+                url : formURL,
+                type: "POST",
+                dataType: "json",
+                data : JSON.stringify(sendInfo),
+                contentType: "application/json; charset=utf-8",
+                success:function(data, textStatus, jqXHR)
+                {
+                    //data: return data from server
+                    $("#modal").hide();
+                    $("div#modal2 h4").html("Thank you, your feedback has been received.");
+                    $("#modal2").show();
+                    setTimeout(function(){
+                        $("#modal2").hide();
+                    }, 3000);
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    //if fails
+                    $("#modal").hide();
+                    $("div#modal2 h4").html("Oops, Something Went Wrong..., please send email to support@stensal.io ");
+                    console.log(errorThrown);
+                    $("#modal2").show();
+                    setTimeout(function(){
+                        $("#modal2").hide();
+                    }, 3000);
+                },
+            });
+        e.preventDefault(); //STOP default action
+    });
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("feedbackBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    var span2 = document.getElementById("span2");
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    span2.onclick = function() {
+        modal2.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal || event.target == modal2) {
+            modal.style.display = "none";
+            modal2.style.display = "none";
+        }
+    }
+  </script>
+  <!-- feedback popup end -->
+
+  
+    
+    <div class="stensal_footer stensal_is_center">
+       <a class="stensal_link" href="http://localhost:3000/static/html/privacy.html">Privacy</a>
+    </div>
+
+
+
+
+  
+
+</body></html>
