@@ -1,0 +1,99 @@
+.pure-g > div {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.l-box {
+    padding: 5px;
+}
+
+.tb-box {
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.bordered {
+    border-style: ridge;
+}
+
+.button-xsmall {
+    font-size: 70%;
+}
+
+.button-small {
+    font-size: 85%;
+}
+
+.button-large {
+    font-size: 110%;
+}
+
+.button-xlarge {
+    font-size: 125%;
+}
+
+.button-success,
+.button-error,
+.button-warning,
+.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-success {
+    background: rgb(28, 184, 65); /* this is a green */
+}
+
+.button-error {
+    background: rgb(202, 60, 60); /* this is a maroon */
+}
+
+.button-warning {
+    background: rgb(223, 117, 20); /* this is an orange */
+}
+
+.button-secondary {
+    background: rgb(66, 184, 221); /* this is a light blue */
+}
+.stensal_bg_secondary {
+    background: rgb(66, 184, 221); /* this is a light blue */
+}
+.stensal_title {
+    color: #707070;
+    text-align: center;
+}
+.stensal_h2 {
+    font-size: 150%;
+}
+
+.stensal_h2:hover {
+}
+
+/* This is the class used for the footer */
+.stensal_footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.stensal_label {
+    font-size: 13px;
+}
+
+.stensal_is_right {
+    text-align: right;
+}
+.stensal_is_center {
+    text-align: center;
+}
+
+.stensal_link {
+    color: #a2a2a2;
+    font-size: 15px;
+}
+
+#privacy p {
+    color : #878787;
+}
+
