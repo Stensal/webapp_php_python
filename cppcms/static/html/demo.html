@@ -1,712 +1,694 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
 <html lang="en">
+<!--<![endif]-->
+<!-- html_area -->
+<!-- head -->
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta name="referrer" content="no-referrer" />
-	<meta name="description" content="Stensal C and C++ - a memory safer implementation of C and C++"/>
-	<meta name="keywords" content="Stensal Inc, Stensal, segmentation fault, core dump, buffer overrun, buffer overflow,
-           user after free, double free, security, safety, memory safety, type safety, C, C++, CPP, malloc, free, mmap, crash, SIGSEGV, crash"/>
-	<link rel="shortcut icon" href="../../docs-/static/ico/favicon.png">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="Stensal C and C++ - a memory safer implementation of C and C++">
+    <meta name="keywords" content="Stensal Inc, Stensal, segmentation fault, core dump, buffer overrun, buffer overflow,
+           user after free, double free, security, safety, memory safety, type safety, C, C++, CPP, malloc, free, mmap, crash, SIGSEGV, crash">
+    <!-- global_assets -->
+    <link rel="stylesheet" href="/static/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/purecss_1_0_0/base.css">
+    <link rel="stylesheet" href="/static/purecss_1_0_0/grids.css">
+    <link rel="stylesheet" href="/static/purecss_1_0_0/grids-responsive.css">
+    <link rel="stylesheet" href="/static/purecss_1_0_0/menus.css">
+    <link rel="stylesheet" href="/static/purecss_1_0_0/buttons.css">
+    <link rel="stylesheet" href="/static/css/stensal.css">
+    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/static/css/reset.css"/>
+    <link rel="stylesheet" href="/static/css/stensal.css"/>
+    <link rel="stylesheet" href="/static/css/responsive.css"/>
+    <script src="/static/js/PostEventSource.js" type="text/javascript" charset="UTF-8"></script>
+    <script src="/static/js/ansi_up.js" type="text/javascript" charset="UTF-8"></script>
+    <link rel="stylesheet" href="/static/codemirror-5.24.2/lib/codemirror.css">
+    <link rel="stylesheet" href="/static/codemirror-5.24.2/addon/dialog/dialog.css">
+    <script src="/static/js/jquery_2_1_1.js"></script>
+   <script src="/static/codemirror-5.24.2/lib/codemirror.js"></script>
+    <script src="/static/codemirror-5.24.2/addon/mode/simple.js"></script>
+    <script src="/static/codemirror-5.24.2/addon/search/searchcursor.js"></script>
+    <script src="/static/codemirror-5.24.2/addon/edit/matchbrackets.js"></script>
+    <script src="/static/codemirror-5.24.2/addon/dialog/dialog.js"></script>
+    <script src="/static/codemirror-5.24.2/addon/display/placeholder.js"></script>
+    <script src="/static/codemirror-5.24.2/mode/clike/clike.js"></script>
+   <script src="/static/js/vue.js"></script>
+    <script>
+    var URL_COMPILE = '/rest/sse/compile';
+    var URL_POST_PERMLINK = '/rest/permlink';
+    var URL_GET_PERMLINK = '/a';
 
-	<title>STENSAL - HOME </title>
+    function default_model() {
+        return {
+            lang: "C",
+            source_code: "",
+            cli_arguments: "",
+            stdin: "",
+            console_messages: [],
+            job_completion: "",
+            context_reference: "",
+        };
+    }
 
-	<!-- purecss core CSS -->
+    var model = default_model();
+    </script>
+    <script src="/static/js/home.js" type="text/javascript" charset="UTF-8"></script>
+    <style>
+    .src-line-info {
+        color: yellow;
+    }
 
-	<link rel="stylesheet" href="/static/css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="/static/purecss_1_0_0/base.css"/>
-	<link rel="stylesheet" href="/static/purecss_1_0_0/grids.css"/>
-	<link rel="stylesheet" href="/static/purecss_1_0_0/grids-responsive.css"/>
-	<link rel="stylesheet" href="/static/purecss_1_0_0/menus.css"/>
-	<link rel="stylesheet" href="/static/purecss_1_0_0/buttons.css"/>
-	<link rel="stylesheet" href="/static/codemirror-5.24.2/lib/codemirror.css"/>
-	<link rel="stylesheet" href="/static/codemirror-5.24.2/addon/dialog/dialog.css"/>
+    /*.floating_panel {
+        position: fixed;
+        top: 12%;
+    }*/
 
-
-	<!-- Custom styles for this template -->
-	<link rel="stylesheet" href="/static/css/reset.css"/>
-	<link rel="stylesheet" href="/static/css/stensal.css"/>
-	<link rel="stylesheet" href="/static/css/responsive.css"/>
-
-
-
+    .h1_title {
+        text-align: center;
+        color: grey;
+        font-size: 150%;
+    }
+    </style>
 </head>
+<!-- body -->
 
 <body onload="stensalui_body_onload();" onresize="stensalui_body_onresize();">
-<script>
-    var stensalui_body_onload = function () {}
-    var stensalui_body_onresize = function () {}
+    <script>
+    var stensalui_body_onload = function() {}
+    var stensalui_body_onresize = function() {}
     var get_model = null;
-</script>
+    </script>
+    <!-- header -->
     <!-- Static navbar -->
-	<div class="navbar navbar-fixed navbar-border menu-wrapper pure-g" id="menu">
-	<div class="pure-u-1 pure-u-md-1-3">
-		<div class="pure-menu">
-			<a class="logo" href="index.html">
-				<img src="/static/images/logo.png" alt="stensal logo" class="pure-img">
-			</a>
-			<a href="#" class="menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s><s class="bar"></s></a>
-		</div>
-	</div>
-	<div class="pure-u-1 pure-u-md-2-3">
-		<div class="pure-menu menu-can-transform pure-menu-horizontal">
-			<ul class="pure-menu-list navbar-nav navbar-right">
-				<li class="pure-menu-item"><a href="products.html" class="pure-menu-link">products</a></li>
-				<li class="pure-menu-item"><a href="demo.html" class="pure-menu-link">demo</a></li>
+    <div class="navbar navbar-fixed navbar-border menu-wrapper pure-g" id="menu">
+        <div class="pure-u-1 pure-u-md-1-3">
+            <div class="pure-menu">
+                <a class="logo" href="index.html">
+                    <img src="/static/images/logo.png" alt="stensal logo" class="pure-img">
+                </a>
+                <a href="#" class="menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s><s class="bar"></s></a>
+            </div>
+        </div>
+        <div class="pure-u-1 pure-u-md-2-3">
+            <div class="pure-menu menu-can-transform pure-menu-horizontal">
+                <ul class="pure-menu-list navbar-nav navbar-right">
+                    <li class="pure-menu-item"><a href="products.html" class="pure-menu-link">products</a></li>
+                    <li class="pure-menu-item"><a href="demo.html" class="pure-menu-link">demo</a></li>
 
-				<li class="pure-menu-item">
-					<a href="issues.html" class="pure-menu-link">issues</a>
-				</li>
+                    <li class="pure-menu-item">
+                        <a href="issues.html" class="pure-menu-link">issues</a>
+                    </li>
 
-				<li class="pure-menu-item"><a href="forum.html" class="pure-menu-link">forum</a></li>
-				<li class="pure-menu-item"><a href="/signup" class="btn-primary signup">Sign Up</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
+                    <li class="pure-menu-item"><a href="forum.html" class="pure-menu-link">forum</a></li>
+                    <li class="pure-menu-item"><a href="/signup" class="btn-primary signup">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- main_area -->
+    <div class="demo">
+        <div class="demo-header">
+                    <div class="container">
+                        
+                        <ul class="list-inline demo-nav text-center">
+                            <li>
+                                <a href="#" class="nav-item current">Buffer overrun(write)</a>
+                            </li>
 
-   <!-- content section -->
+                            <li>
+                                <a href="#" class="nav-item">Buffer overrun lower addresses</a>
+                            </li>
 
-	<main class="demo products">
-		<div class="demo-header">
-			<div class="container">
-				
-				<ul class="list-inline demo-nav text-center">
-					<li>
-						<a href="#" class="nav-item current">Buffer overrun(write)</a>
-					</li>
+                            <li>
+                                <a href="#" class="nav-item">Dereference non pointer</a>
+                            </li>
 
-					<li>
-						<a href="#" class="nav-item">Buffer overrun lower addresses</a>
-					</li>
+                            <li>
+                                <a href="#" class="nav-item">Your own <br>code</a>
+                            </li>
+                        </ul>
+                            
+                    </div>
+                </div>
+        <div class="sec-editor">
+            <div class="pure-g">
+                <div class="l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
+                    <div id="editor_root">
+                        <h3 class="h3 text-center">C/C++ Source Code</h3>
+                        <textarea id="code_editor" placeholder="Code goes here..."></textarea>
+                    </div>
+                    <script>
+                    // model -> ui
+                    var editor_vue = new Vue({
+                        el: "#editor_root",
+                        data: {
+                            context_reference: "",
+                        },
+                        methods: {
+                            populate: function(m) {
+                                code_editor.setValue(m.source_code);
+                                this.context_reference = m.context_reference;
+                            },
+                            loadusage: function() {
+                                model = usage_model();
+                                populate_model_to_vues();
+                            },
+                            retrieve_model: function() {
+                                model.source_code = code_editor.getValue();
+                                model.context_reference = this.context_reference;
+                            }
+                        }
+                    });
 
-					<li>
-						<a href="#" class="nav-item">Dereference non pointer</a>
-					</li>
+                    var editor = document.querySelector("#code_editor");
+                    var code_editor = CodeMirror.fromTextArea(editor, {
+                        lineNumbers: true,
+                        viewportMargin: Infinity,
+                        theme: 'default',
+                        indentUnit: 4,
+                        keyMap: "default",
+                        matchBrackets: true,
+                        mode: "text/x-c++src",
+                        lineWrapping: true,
+                        styleActiveLine: true,
+                    });
 
-					<li>
-						<a href="#" class="nav-item">Your own <br>code</a>
-					</li>
-				</ul>
-					
-			</div>
-		</div>
+                    var activatedLine = -1;
 
-		<section class="sec-editor">
-			
-			<div class="pure-g">
-				<div class="l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
-					<div class="edit-box scode" id="editor_root">
-						<h3 class="h3 text-center">C/C++ Source Code</h3>
-						<div class="edit-info source-code">
-							<div class="CodeMirror cm-s-default CodeMirror-wrap">
-								<div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 64.987px; left: 199.271px;">
-									<textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;" tabindex="0"></textarea>
-								</div>
-								<div class="CodeMirror-vscrollbar" cm-not-content="true">
-									<div style="min-width: 1px; height: 0px;"></div>
-								</div>
-								<div class="CodeMirror-hscrollbar" cm-not-content="true">
-									<div style="height: 100%; min-height: 1px; width: 0px;"></div>
-								</div>
-								<div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div>
-								<div class="CodeMirror-gutter-filler" cm-not-content="true"></div>
-								<div class="CodeMirror-scroll" tabindex="-1" draggable="false">
-									<div class="CodeMirror-sizer" style="margin-left: 30px; margin-bottom: -21px; border-right-width: 9px; min-height: 1388px; padding-right: 0px; padding-bottom: 0px;">
-										<div style="position: relative; top: 0px;">
-											<div class="CodeMirror-lines">
-												<div style="position: relative; outline: none;">
-													<div class="CodeMirror-measure"><pre>x</pre>
-														<div class="CodeMirror-linenumber CodeMirror-gutter-elt">
-															<div>1</div>
-														</div>
-														<div class="CodeMirror-linenumber CodeMirror-gutter-elt">
-															<div>92</div>
-														</div>
-													</div>
-													<div class="CodeMirror-measure"></div>
-													<div style="position: relative; z-index: 1;"></div>
-													<div class="CodeMirror-cursors" style="">
-														<div class="CodeMirror-cursor" style="left: 168.281px; top: 60px; height: 15px;">&nbsp;</div>
-													</div>
-													<div class="CodeMirror-code" style="">
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">1</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-meta">#include &lt;stdio.h&gt;</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">2</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-meta">#include &lt;stdlib.h&gt;</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">3</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-meta">#include &lt;string.h&gt;</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">4</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">5</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable-3">int</span> <span class="cm-def">ascii</span>(<span class="cm-variable-3">char</span> <span class="cm-variable">str</span>[<span class="cm-number">1</span>]);</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">6</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable-3">char</span> <span class="cm-def">give</span>(<span class="cm-variable-3">int</span> <span class="cm-variable">x</span>);</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">7</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">8</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable-3">int</span> <span class="cm-def">main</span>()</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">9</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">{</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">10</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable-3">char</span> <span class="cm-variable">str</span>[<span class="cm-number">100</span>];</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">11</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">printf</span>(<span class="cm-string">"Enter the text: "</span>);</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">12</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">gets</span>(<span class="cm-variable">str</span>);</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">13</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable-3">char</span> <span class="cm-variable">key</span>[<span class="cm-variable">strlen</span>(<span class="cm-variable">str</span>)<span class="cm-operator">*</span><span class="cm-number">3</span>];</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">14</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable-3">int</span> <span class="cm-variable">j</span><span class="cm-operator">=</span><span class="cm-number">0</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">15</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-keyword">for</span> (<span class="cm-variable-3">int</span> <span class="cm-variable">i</span><span class="cm-operator">=</span><span class="cm-number">0</span>;<span class="cm-variable">i</span><span class="cm-operator">&lt;</span><span class="cm-variable">strlen</span>(<span class="cm-variable">str</span>);<span class="cm-variable">i</span><span class="cm-operator">++</span>)</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">16</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">17</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable-3">int</span> <span class="cm-variable">k</span><span class="cm-operator">=</span><span class="cm-variable">ascii</span>(<span class="cm-variable">str</span>[<span class="cm-variable">i</span>]);</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">18</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">for</span> (<span class="cm-variable-3">int</span> <span class="cm-variable">l</span><span class="cm-operator">=</span><span class="cm-variable">j</span>;<span class="cm-variable">l</span><span class="cm-operator">&lt;</span>(<span class="cm-variable">j</span><span class="cm-operator">+</span><span class="cm-number">3</span>);<span class="cm-variable">l</span><span class="cm-operator">++</span>)</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">19</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">20</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable-3">int</span> <span class="cm-variable">x</span><span class="cm-operator">=</span><span class="cm-variable">k</span><span class="cm-operator">%</span><span class="cm-number">10</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">21</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">k</span><span class="cm-operator">=</span><span class="cm-variable">k</span><span class="cm-operator">/</span><span class="cm-number">10</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">22</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">key</span>[<span class="cm-variable">l</span>]<span class="cm-operator">=</span><span class="cm-variable">give</span>(<span class="cm-variable">x</span>);</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">23</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">printf</span>(<span class="cm-string">"%c"</span>,<span class="cm-variable">key</span>[<span class="cm-variable">l</span>]);</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">24</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">25</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">j</span><span class="cm-operator">=</span><span class="cm-variable">j</span><span class="cm-operator">+</span><span class="cm-number">3</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">26</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">27</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">}</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">28</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">29</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable-3">int</span> <span class="cm-def">ascii</span>(<span class="cm-variable-3">char</span> <span class="cm-variable">str</span>[<span class="cm-number">1</span>])</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">30</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">{</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">31</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-keyword">return</span> (<span class="cm-variable-3">int</span>) <span class="cm-variable">str</span>[<span class="cm-number">0</span>];</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">32</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">}</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">33</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">34</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable-3">char</span> <span class="cm-def">give</span>(<span class="cm-variable-3">int</span> <span class="cm-variable">x</span>)</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">35</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">{</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">36</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable-3">char</span> <span class="cm-variable">a</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">37</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-keyword">switch</span>(<span class="cm-variable">x</span>)</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">38</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">39</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">1</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">40</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">41</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'1'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">42</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">43</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">44</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">2</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">45</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">46</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'2'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">47</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">48</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">49</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">3</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">50</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">51</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'3'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">52</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">53</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">54</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">4</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">55</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">56</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'4'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">57</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">58</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">59</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">5</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">60</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">61</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'5'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">62</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">63</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">64</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">6</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">65</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">66</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'6'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">67</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">68</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">69</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">7</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">70</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">71</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'7'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">72</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">73</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">74</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">8</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">75</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">76</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'8'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">77</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">78</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">79</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">9</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">80</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">81</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'9'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">82</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">83</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">84</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">case</span> <span class="cm-number">0</span>:</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">85</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">86</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-variable">a</span><span class="cm-operator">=</span> <span class="cm-string">'0'</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">87</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">break</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">88</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">89</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span cm-text="">​</span></span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">90</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-keyword">return</span> <span class="cm-variable">a</span>;</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">91</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp;  }</span></pre></div>
-														<div style="position: relative;">
-															<div class="CodeMirror-gutter-wrapper" style="left: -30px;">
-																<div class="CodeMirror-linenumber CodeMirror-gutter-elt" style="left: 0px; width: 21px;">92</div>
-															</div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">}</span></pre></div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div style="position: absolute; height: 9px; width: 1px; border-bottom: 0px solid transparent; top: 1388px;"></div>
-									<div class="CodeMirror-gutters" style="height: 1397px;">
-										<div class="CodeMirror-gutter CodeMirror-linenumbers" style="width: 29px;"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
-					<div class="right">
-						<div id="fpanel1" class="l-box pure-u-1 pure-u-sm-1 floating_panel">
-							<div id="program_input" class="pure-g">
-								<div class="padded-box pure-u-1 pure-u-sm-1 edit-box">
-									<h3 class="h3 text-center">Enter Program Arguments</h3>
-									<textarea id="cli_arguments" class="edit-info textarea-info" rows="2"></textarea>
-								</div>
-								<div class="padded-box pure-u-1 pure-u-sm-1 edit-box enter-stdin">
-									<h3 class="h3 text-center">Enter Stdin</h3>
-									<textarea id="vue_stdin" class="edit-info textarea-info" rows="4">
-								</textarea>
-								</div>
-							</div>
-						</div>
-						<style>
-							.blue_text {
-								color: rgb(0, 120, 231);
-								font-size: 13px;
-							}
-							#result-container {
-								overflow: hidden;
-								background-color: #ddd;
-							}
-							.console_display_class {
-								margin: 0px;
+                    function highlightLine(lineNumber) {
+                        //Line number is zero based index
+                        var actualLineNumber = lineNumber - 1;
+                        if (activatedLine > 0) {
+                            code_editor.removeLineClass(activatedLine, 'wrap', 'line-error');
+                        }
+                        activatedLine = actualLineNumber;
+                        code_editor.addLineClass(activatedLine, 'wrap', 'line-error');
+                        var height = code_editor.heightAtLine(activatedLine, "page");
+                        window.scrollTo(0, height);
+                        return false;
+                    }
+                    </script>
+                    <style type="text/css">
+                    .line-error {
+                        background: yellow;
+                    }
 
-								background-color: #000000;
-								height: 325px;
-								overflow-y: scroll;
-							}
-							.console_display_class pre {
-								margin: 0px 0px 10px;
-								padding: 0px;
+                    #editor_root .CodeMirror {
+                        border: 1px solid #b9b9b9;
+                        font-size: 13px;
+                        height: auto;
+                        min-height: 500px;
+                    }
 
-								background-color: #000000;
-								color: #ffffff;
-								border: 0px;
-								font-family: "Courier New", monospace;
-								font-size: 11px;
-							}
-							.console_display_class .CompilerMessageE {
-								color: #ff0000;
-							}
-							.console_display_class .StdOut {
-							}
-							.console_display_class .Control {
-								color: #00ff00;
-							}
-							.console_display_class .Signal {
-								color: #ff0000;
-							}
-							.console_display_class .ExitCode {
-								color: #ff00ff;
-							}
-							.expand .console_display_class {
-								min-height: 300px;
-								height: auto;
-							}
-							.nowrap .console_display_class pre {
-								word-wrap: normal;
-							}
-							#execution_panel .padded-box {
-								padding-left: 1em;
-								padding-right: 1em;
-							}
-						</style>
-						<div id="execution_panel" class="run-code">
-							<div class="tb-box pure-form">
-								<div id="submit_job_root" class="left-in">
-									<button id="stensal-compile" onclick="submit_code()" class="pure-button pure-button-primary btn btn-block btn-run" style="display: block;">Run As</button>
-									<img id="stensal-compiling" src="/static/images/compiling.gif" alt="Compiling" style="display: none;">
-								</div>
-								<div class="right-in">
-									<div class="choose">
-										<label for="option-c" class="pure-radio blue_text stensal_is_center stensal_label option">
-											<input id="option-c" type="radio" name="langOptions" value="C" onchange="selectC();" checked="checked"><i></i>C
-										</label>
-										<label for="option-cpp" class="pure-radio blue_text stensal_is_center  stensal_label option">
-											<input id="option-cpp" type="radio" name="langOptions" onchange="selectCpp();" value="C++"><i></i>C++
-										</label>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div id="console_panel" class="console">
-							<div class="pure-menu pure-menu-horizontal">
-								<ul class="pure-menu-list">
-									<li class="pure-menu-item">
-										<button onclick="clear_console();" class="pure-button pure-button-primary btn-primary">Clear Console</button>
-									</li>
-									<li class="pure-menu-item">
-										<button id="share_this_btn" onclick="shareCode()" class="pure-button pure-button-primary btn-primary" style="display: block;">Share</button> <a id="shared_url" href="" style="display: none;">https://stensal.io</a></li>
-								</ul>
-							</div>
-							<div id="result-container" class="pure-g">
-								<div class="l-box pure-u-1 pure-u-sm-u-1 pure-u-md-u-1">
-									<div id="console_display" class="console_display_class"><pre class="Control" data-type="Control" data-text="Start">Start</pre><pre class="StdOut" data-type="StdOut" data-text="Coloring of Graph 1
-">Coloring of Graph 1
-</pre><pre class="StdErr" data-type="StdErr" data-text="
-DTS_MSG: Stensal DTS detected a runtime program error. Abort execution!
-DTS_MSG: Writing 1 bytes at 0xffe1f668 violates type safety.
-DTS_MSG: Diagnostic information:
+                    #editor_root .CodeMirror-scroll {
+                        min-height: 500px;
+                        overflow-y: hidden;
+                        overflow-x: auto;
+                    }
+                    </style>
+                </div>
+                <div class="l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2">
+                    <div class="right">
+                        <div id="fpanel1" class="l-box pure-u-1 pure-u-sm-1 floating_panel">
+                            <div id="program_input" class="pure-g">
+                                <div class="padded-box pure-u-1 pure-u-sm-1 edit-box">
+                                    <h3 class="h3 text-center">Enter Program Arguments</h3>
+                                    <textarea id="cli_arguments" class="edit-info textarea-info" rows="2" v-model="cli_arguments"></textarea>
+                                </div>
+                                <div class="padded-box pure-u-1 pure-u-sm-1 edit-box enter-stdin">
+                                    <h3 class="h3 text-center">Enter Stdin</h3>
+                                    <textarea id="vue_stdin" class="edit-info textarea-info" rows="4" v-model="stdin"></textarea>
+                                </div>
+                            </div>
+                             <script>
+                    // bindirection data bindings
+                    // model <-> ui
+                    var prog_input_vue = new Vue({
+                        el: "#program_input",
+                        data: {
+                            cli_arguments: "",
+                            stdin: "",
+                        },
+                        methods: {
+                            populate: function(m) {
+                                this.cli_arguments = m.cli_arguments;
+                                this.stdin = m.stdin;
+                            }
+                        }
+                    });
+                    // propogate the values to execution panel display only
+                    prog_input_vue.$watch('cli_arguments', function(nv, ov) {
+                        execution_panel_vue.$data.cli_arguments = nv;
+                    });
+                    prog_input_vue.$watch('stdin', function(nv, ov) {
+                        if (nv == "")
+                            execution_panel_vue.$data.stdin_pipe = "";
+                        else
+                            execution_panel_vue.$data.stdin_pipe = "echo \"" + nv + "\" |";
+                    });
+                    </script>
+                    <style>
+                    #fpanel1{
+                        width: 100%;
+                    }
+                    #program_input .padded-box {
+                        padding-bottom: 5px;
+                    }
 
-- The object to-be-written (start:0xfff0e35c, size:5 bytes) is allocated at
--     file:/prog.cc::60, 10
--                               0xfff0e35c               0xfff0e360
--                               +------------------------+
--                         ......|the object to-be-written|
--                               +------------------------+
--                         ^~~~~~~~~~
-- the write starts at 0xffe1f668 that is 978164 bytes before the object start.
-- Stack trace (most recent call first):
--[1]  file:/prog.cc::96, 34
--[2]  file:/prog.cc::129, 5
--[3]  file:/src/env/__libc_start_main.c::153, 11
-">
-DTS_MSG: Stensal DTS detected a runtime program error. Abort execution!
-DTS_MSG: Writing 1 bytes at 0xffe1f668 violates type safety.
-DTS_MSG: Diagnostic information:
+                    #program_input boxsizingBorder {
+                        -webkit-box-sizing: border-box;
+                        -moz-box-sizing: border-box;
+                        box-sizing: border-box;
+                    }
 
-- The object to-be-written (start:0xfff0e35c, size:5 bytes) is allocated at
--     file:/<a href="/notfound" class="src-line-info" onclick="highlightLine(60); return false;">prog.cc::60</a>, 10
--                               0xfff0e35c               0xfff0e360
--                               +------------------------+
--                         ......|the object to-be-written|
--                               +------------------------+
--                         ^~~~~~~~~~
-- the write starts at 0xffe1f668 that is 978164 bytes before the object start.
-- Stack trace (most recent call first):
--[1]  file:/<a href="/notfound" class="src-line-info" onclick="highlightLine(96); return false;">prog.cc::96</a>, 34
--[2]  file:/<a href="/notfound" class="src-line-info" onclick="highlightLine(129); return false;">prog.cc::129</a>, 5
--[3]  file:/src/env/__libc_start_main.c::153, 11
-</pre><pre class="ExitCode" data-type="ExitCode" data-text="1">1</pre><pre class="Control" data-type="Control" data-text="Finish">Finish</pre></div>
-								</div>
-							</div>
-						</div>
-					</div>
+                    #program_input textarea {
+                        width: 100%;
+                        resize: vertical;
+                        font-size: 13px;
+                    }
 
-				</div>
-			</div>
+                    #program_input label {
+                        color: rgb(0, 120, 231);
+                        font-size: 13px;
+                    }
+                    </style>
+                        </div>
+                        <style>
+                            .blue_text {
+                                color: rgb(0, 120, 231);
+                                font-size: 13px;
+                            }
+                            #result-container {
+                                overflow: hidden;
+                                background-color: #ddd;
+                            }
+                            .console_display_class {
+                                margin: 0px;
 
-				
-				
+                                background-color: #000000;
+                                height: 325px;
+                                overflow-y: scroll;
+                            }
+                            .console_display_class pre {
+                                margin: 0px 0px 10px;
+                                padding: 0px;
 
-				
-			
-		</section>
-	</main>
+                                background-color: #000000;
+                                color: #ffffff;
+                                border: 0px;
+                                font-family: "Courier New", monospace;
+                                font-size: 11px;
+                            }
+                            .console_display_class .CompilerMessageE {
+                                color: #ff0000;
+                            }
+                            .console_display_class .StdOut {
+                            }
+                            .console_display_class .Control {
+                                color: #00ff00;
+                            }
+                            .console_display_class .Signal {
+                                color: #ff0000;
+                            }
+                            .console_display_class .ExitCode {
+                                color: #ff00ff;
+                            }
+                            .expand .console_display_class {
+                                min-height: 300px;
+                                height: auto;
+                            }
+                            .nowrap .console_display_class pre {
+                                word-wrap: normal;
+                            }
+                            #execution_panel .padded-box {
+                                padding-left: 1em;
+                                padding-right: 1em;
+                            }
+                        </style>
+                        <div id="execution_panel" class="run-code">
+                            <div class="tb-box pure-form">
+                                <div id="submit_job_root" class="left-in">
+                                    <button id="stensal-compile" onclick="submit_code()" class="pure-button pure-button-primary btn btn-block btn-run" style="display: block;">Run As</button>
+                                    <img id="stensal-compiling" src="/static/images/compiling.gif" alt="Compiling" style="display: none;">
+                                </div>
+                                <div class="right-in">
+                                    <div class="choose">
+                                        <label for="option-c" class="pure-radio blue_text stensal_is_center stensal_label option">
+                                            <input id="option-c" type="radio" name="langOptions" value="C" onchange="selectC();" checked="checked"><i></i>C
+                                        </label>
+                                        <label for="option-cpp" class="pure-radio blue_text stensal_is_center  stensal_label option">
+                                            <input id="option-cpp" type="radio" name="langOptions" onchange="selectCpp();" value="C++"><i></i>C++
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="console_panel" class="console">
+                            <div class="pure-menu pure-menu-horizontal">
+                                <ul class="pure-menu-list">
+                                    <li class="pure-menu-item">
+                                        <button onclick="clear_console();" class="pure-button pure-button-primary btn-primary">Clear Console</button>
+                                    </li>
+                                    <li class="pure-menu-item">
+                                        <button id="share_this_btn" onclick="shareCode()" class="pure-button pure-button-primary btn-primary" style="display: block;">Share</button> <a id="shared_url" v-bind:href="permlink" style="display: none;">{{ host }}{{ permlink }}</a></li>
+                                </ul>
+                            </div>
+                            <div id="result-container" class="pure-g">
+                                <div class="l-box pure-u-1 pure-u-sm-u-1 pure-u-md-u-1">
+                                    <div id="console_display" class="console_display_class"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                    display_ready_compiling();
+                    hide_sharing();
+
+                    function submit_code() {
+                        clear_console();
+                        display_compiling();
+                        retrieve_model_from_ui();
+                        if (model.source_code == "") {
+                            var data = [{
+                                type: "Control",
+                                message: "Start"
+                            }, {
+                                type: "CompilerMessageE",
+                                message: "Please provide source code."
+                            }, {
+                                type: "Control",
+                                message: "Finished"
+                            }, ];
+                            populate_result(data);
+                            display_ready_compiling();
+                        } else {
+                            post_code(model.lang, model.source_code, [], model.cli_arguments,
+                                model.stdin,
+                                model.context_reference,
+                                function() {
+                                    display_ready_compiling();
+                                    display_share_this();
+                                });
+                        }
+                    }
+                    // data binding direction
+                    // execution_panel_vue -> ui
+                    var execution_panel_vue = new Vue({
+                        el: "#execution_panel",
+                        data: {
+                            run_as_lang: "C",
+                            compiler: "",
+                            compilation_arguments: "",
+                            cli_arguments: "",
+                            stdin_pipe: "",
+                            batch_job: "",
+                            permlink: "",
+                            permlink_name: "",
+                            host: (window.location.protocol === "https:" ?
+                                'https://' : 'http://') + window.location.host,
+                            console_messages: [],
+                            job_completion: "",
+                        },
+                        methods: {
+                            populate: function(m) {
+                                this.run_as_lang = m.lang;
+                                if (m.lang == "C") {
+                                    this.compiler = "stensal-clang";
+                                    this.compilation_arguments = "prog.c";
+                                    var e = document.querySelector("#option-c");
+                                    e.checked = true;
+                                } else {
+                                    this.compiler = "stensal-clang++";
+                                    this.compilation_arguments = "prog.cc";
+                                    var e = document.querySelector("#option-cpp");
+                                    e.checked = true;
+                                }
+                                this.console_messages = m.console_messages;
+                                this.job_completion = m.job_completion;
+                                document.querySelector("#console_display").innerHTML = null;
+                                populate_result(this.console_messages);
+                                if (this.job_completion != "")
+                                    display_share_this();
+                            },
+                            retrieve_model: function() {
+                                model.console_messages = this.console_messages;
+                                model.job_completion = this.job_completion;
+                                model.lang = this.run_as_lang;
+                            }
+                        }
+                    });
+
+                    function selectC() {
+                        execution_panel_vue.$data.run_as_lang = "C";
+                        execution_panel_vue.$data.compiler = "stensal-clang";
+                        execution_panel_vue.$data.compilation_arguments = "prog.c";
+                    }
+
+                    function selectCpp() {
+                        execution_panel_vue.$data.run_as_lang = "C++";
+                        execution_panel_vue.$data.compiler = "stensal-clang++";
+                        execution_panel_vue.$data.compilation_arguments = "prog.cc";
+                    }
+
+                    function clear_console() {
+                        document.querySelector("#console_display").innerHTML = null;
+                        execution_panel_vue.$data.console_messages = [];
+                        execution_panel_vue.$data.job_completion = "";
+                        hide_sharing();
+                    }
+
+                    function shareCode() {
+                        retrieve_model_from_ui();
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', URL_POST_PERMLINK, true);
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState == 4 && xhr.status == 200) {
+                                var json = JSON.parse(xhr.responseText);
+                                // we get the permlink url;
+                                if (json.permlink != undefined) {
+                                    execution_panel_vue.$data.permlink_name = json.permlink;
+                                    execution_panel_vue.$data.permlink = URL_GET_PERMLINK + "/" + json.permlink;
+                                    execution_panel_vue.$data.job_completion = "";
+                                    display_shared_url();
+                                }
+                            }
+                            if (xhr.status != 200) {
+                                console.log("invalid job id");
+                            }
+                        };
+                        xhr.send(JSON.stringify({
+                            job_completed: model.job_completion,
+                            context_reference: model.context_reference,
+                        }));
+                    }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    // pure model, no react
+    function reset_model() {
+        model = default_model();
+    }
+
+    var el = document.querySelector("#fpanel1");
+    stensalui_body_onresize = function() {
+        var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+        if (width >= 800) {
+            el.className = 'l-box pure-u-1 pure-u-sm-1 pure-u-md-1-2 floating_panel';
+        } else {
+            el.className = 'l-box pure-u-1 pure-u-sm-1 pure-u-md-1';
+        }
+    }
+
+    get_model = function() {
+        return model;
+    }
+
+    function restoreToDefault() {
+        reset_model();
+        populate_model_to_vues();
+    }
+
+    function restore_model() {
+        // restore model
+        var v = sessionStorage.getItem("model");
+        if (v != null) {
+            model = JSON.parse(v);
+            populate_model_to_vues();
+        }
+    }
+
+    function persist_model() {
+        // persist the model;
+        retrieve_model_from_ui();
+        var str = JSON.stringify(model);
+        sessionStorage.setItem("model", str);
+    }
+
+    function retrieve_model_from_ui() {
+        editor_vue.retrieve_model();
+        model.stdin = prog_input_vue.$data.stdin;
+        model.cli_arguments = prog_input_vue.$data.cli_arguments;
+        execution_panel_vue.retrieve_model();
+    }
+
+    function populate_model_to_vues() {
+        editor_vue.populate(model);
+        prog_input_vue.populate(model);
+        execution_panel_vue.populate(model);
+    }
+    // initialize the vues once in loading.
+    populate_model_to_vues();
 
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-	<script src="/static/js/PostEventSource.js" type="text/javascript" charset="UTF-8"></script>
-	<script src="/static/js/ansi_up.js" type="text/javascript" charset="UTF-8"></script>
-	<script src="/static/js/jquery_2_1_1.js"></script>
-	<script src="/static/codemirror-5.24.2/lib/codemirror.js"></script>
-	<script src="/static/codemirror-5.24.2/addon/mode/simple.js"></script>
-	<script src="/static/codemirror-5.24.2/addon/search/searchcursor.js"></script>
-	<script src="/static/codemirror-5.24.2/addon/edit/matchbrackets.js"></script>
-	<script src="/static/codemirror-5.24.2/addon/dialog/dialog.js"></script>
-	<script src="/static/codemirror-5.24.2/addon/display/placeholder.js"></script>
-	<script src="/static/codemirror-5.24.2/mode/clike/clike.js"></script>
-	<script src="/static/js/vue.js"></script>
-	<script>
-        var URL_COMPILE = '/rest/sse/compile';
-        var URL_POST_PERMLINK = '/rest/permlink';
-        var URL_GET_PERMLINK = '/a';
+    // the following logic make sure reload will not
+    // wipe out the data.
+    window.onload = function() {
+        restore_model();
+        stensalui_body_onresize();
+    }
 
-        function default_model () {
-            return {
-                lang: "C",
-                source_code: "",
-                cli_arguments: "",
-                stdin: "",
-                console_messages: [],
-                job_completion: "",
-                context_reference : "",
-            };
+    window.onbeforeunload = persist_model;
+    </script>
+    <!-- feedback popup begin -->
+    <link rel="stylesheet" href="/static/css/feedback.css">
+    <link rel="stylesheet" href="/static/css/forms.css">
+    <button class="vertical-text pure-button button-small button-secondary" id="feedbackBtn">Contact us</button>
+    <!-- The Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="pure-g">
+                <div class="pure-u-23-24"></div>
+                <div class="pure-u-1-24">
+                    <span class="close">×</span>
+                </div>
+            </div>
+            <form class="pure-form pure-form-aligned" action="/feedback" method="post" id="form">
+                <legend>Contact us</legend>
+                <fieldset>
+                    <div class="pure-control-group">
+                        <label for="email">Your email:</label>
+                        <input id="email" name="email" placeholder="email" class="pure-input-1-2 form-control login-email" type="email">
+                    </div>
+                    <div class="pure-control-group">
+                        <label for="subject">Subject:</label>
+                        <select id="subject" class="pure-input-1-2">
+                            <option selected="selected">Bug Report</option>
+                            <option>Feature Request</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <textarea id="msg" name="message" rows="8" class="pure-input-1" placeholder="Message"></textarea>
+                </fieldset>
+                <fieldset>
+                    <input id="notify_me" name="feedback_notification" checked="checked" type="checkbox">
+                    <label for="feedback_notification">Notify me new features</label>
+                </fieldset>
+                <button id="submit_feedback" type="submit" class="pure-button button-secondary button-small">Send</button>
+            </form>
+        </div>
+    </div>
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close" id="span2">×</span>
+            <h4></h4>
+        </div>
+    </div>
+    <script>
+    // Get the modal
+    var modal = document.getElementById('modal');
+    var modal2 = document.getElementById('modal2');
+    $("#form").submit(function(e) {
+        var context = null;
+        if (get_model != null) {
+            context = get_model();
+        }
+        var sendInfo = {
+            email: document.querySelector("#email").value,
+            subject: document.querySelector("#subject").value,
+            message: document.querySelector("#msg").value,
+            support_context: context,
+            notify_me: document.querySelector("#notify_me").checked,
         }
 
-        var model = default_model ();
-	</script>
-	<script src="/static/js/home.js" type="text/javascript" charset="UTF-8"></script>
-    <script>
-    	$(function(){
-    		$('#carousel-generic').carousel();
-    	});
+        var postData = $(this).serializeArray();
+        var formURL = $(this).attr("action");
+        console.log(sendInfo);
+        if (sendInfo.message == "") {
+            alert("Fill the message field!");
+            return false;
+        }
+        $.ajax({
+            url: formURL,
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(sendInfo),
+            contentType: "application/json; charset=utf-8",
+            success: function(data, textStatus, jqXHR) {
+                //data: return data from server
+                $("#modal").hide();
+                $("div#modal2 h4").html("Thank you, your feedback has been received.");
+                $("#modal2").show();
+                setTimeout(function() {
+                    $("#modal2").hide();
+                }, 3000);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                //if fails
+                $("#modal").hide();
+                $("div#modal2 h4").html("Oops, Something Went Wrong..., please send email to support@stensal.io ");
+                console.log(errorThrown);
+                $("#modal2").show();
+                setTimeout(function() {
+                    $("#modal2").hide();
+                }, 3000);
+            },
+        });
+        e.preventDefault(); //STOP default action
+    });
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("feedbackBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    var span2 = document.getElementById("span2");
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    span2.onclick = function() {
+        modal2.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal || event.target == modal2) {
+            modal.style.display = "none";
+            modal2.style.display = "none";
+        }
+    }
     </script>
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="/static/js/ui.js"></script>
-	<script src="/static/js/global.js"></script>
+    <!-- feedback popup end -->
 </body>
 
 </html>
