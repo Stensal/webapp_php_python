@@ -96,4 +96,8 @@ class ssoHelper{
         }
     }
 
+    public function auto_logout(){
+        global $user;
+        return $user->session_kill();
+    }
 }
