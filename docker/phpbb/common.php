@@ -21,6 +21,7 @@ if (!defined('IN_PHPBB'))
 }
 
 require_once($phpbb_root_path . '../session.php');
+require_once($phpbb_root_path . 'ext/sso_helper.php');
 if($session['access_token']){
     define('GITHUB_LOGGED_IN', true);
     define('GITHUB_USER_NAME', $session['github_user_name']);
@@ -171,5 +172,3 @@ foreach ($phpbb_hook_finder->find() as $hook)
 * @since 3.1.0-a1
 */
 $phpbb_dispatcher->dispatch('core.common');
-
-require($phpbb_root_path . 'auto-login.' . $phpEx);
