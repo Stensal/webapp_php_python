@@ -98,6 +98,9 @@ class ssoHelper{
 
     public function auto_logout(){
         global $user;
+        if($user->data['group_id'] == '5'){ // this is admin user
+            return false;
+        }
         return $user->session_kill();
     }
 }

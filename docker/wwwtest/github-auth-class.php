@@ -11,6 +11,13 @@ class githubAuth{
     protected $redirectUri = 'http://localhost:8000/auth.php?callback';
 
     public function __construct(){
+        if(defined('HOME_URI')){
+            $this->homeUri = HOME_URI;
+        }
+        if(defined('REDIRECT_URI')){
+            $this->redirectUri = REDIRECT_URI;
+        }
+
         if(get('act') == 'logout'){
             $this->authLogout();
             header('Location: ' . $this->homeUri);
