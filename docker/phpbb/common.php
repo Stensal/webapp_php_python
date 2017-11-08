@@ -20,6 +20,16 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+require_once($phpbb_root_path . '../session.php');
+require_once($phpbb_root_path . 'ext/sso_helper.php');
+if($session['access_token']){
+    define('GITHUB_LOGGED_IN', true);
+    define('GITHUB_USER_NAME', $session['github_user_name']);
+    define('GITHUB_USER_EMAIL', $session['github_user_email']);
+}else{
+    define('GITHUB_LOGGED_IN', false);
+}
+
 require($phpbb_root_path . 'includes/startup.' . $phpEx);
 require($phpbb_root_path . 'phpbb/class_loader.' . $phpEx);
 
