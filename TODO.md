@@ -1,1 +1,2 @@
-Implement markup/stensal in Python
+- Implement markup/stensal in Python
+- Please use the assets in cppcms to implement the UI.
