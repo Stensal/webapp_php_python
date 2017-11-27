@@ -159,11 +159,14 @@
 	.issues-item .title-text{
 	    font-size: 1rem;
 	}
-	.issues-item .title{
+	.issues-item{
+		padding: 1.5rem 0;
+	}
+	/*.issues-item .title{
 	    white-space: nowrap;
 	    overflow: hidden;
 	    text-overflow: ellipsis;
-	}
+	}*/
 	.issues-fixed{
     	left: 0;
     	right: 0;
@@ -199,6 +202,9 @@
 	.pure-menu-link{
 		padding-top: 10px;
 		padding-bottom: 10px;
+	}
+	.comments-item .comment-info{
+		padding-left: .7rem;
 	}
 }
 @media (min-width: 768px){
