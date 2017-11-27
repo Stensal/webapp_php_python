@@ -717,7 +717,7 @@ input::placeholder{
     font-size: .75rem;
     margin-bottom: 2rem;
 }
-.post-info .timeago, .post-info .post-watch, .post-info span, .comments-item > a, .comments-item .comment-info{
+.post-info .timeago, .post-info .post-watch, .post-info span, .comments-item > a{
     display: inline-block;
 }
 .post-info span{
@@ -736,12 +736,14 @@ input::placeholder{
 }
 .comments-item > a{
     text-align: center;
+    float: left;
 }
 .comments-item .comment-num, .comments-item .comment-info span{
     display: block;
 }
 .comments-item .comment-info{
     padding-left: 1.5rem;
+    overflow: hidden;
 }
 .comments-item .comment-info .date{
     padding: 0;
@@ -755,7 +757,11 @@ input::placeholder{
 }
 .comments-list .reply{
     text-align: right;
+    margin-top: 10px;
 }
 .login-to-comment{
     margin: 1rem 0 3rem;
+}
+.issues-item .title{
+    overflow: hidden;
 }
