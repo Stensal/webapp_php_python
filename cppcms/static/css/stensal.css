@@ -223,7 +223,7 @@
     background-color: rgba(70, 143, 187, .7);
     color: #fff;
 }
-.issues-sec, .navbar-border{
+.issues-sec, .navbar-border, .post-body{
     border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 .navbar{
@@ -245,6 +245,9 @@
 }
 .h1{
     font-size: 2.5rem;
+}
+.h2{
+    font-size: 2.2rem;
 }
 .main-banner .subtitle{
     display: block;
@@ -437,7 +440,7 @@
 }
 .navbar-nav a.primary, .navbar-nav > li > a.active, .main-banner,
 .products .overlay .btn-download:hover, .demo-header,.sec-editor .h3,
-.label-list .label-link.current, .label-list .label-link:hover{
+.label-list .label-link.current, .label-list .label-link:hover, .post-header .label:hover{
     background-color: #468fbb;
     color: #fff;
 }
@@ -494,7 +497,7 @@ input::placeholder{
   color: #468fbb;
 }
 .issues-labels .edit-link, .label-list .label-link, .footer .contact .list-inline a,
-.issues-item .label, .stensal-pager>a{
+.issues-item .label, .stensal-pager>a, .post-header .label{
     border: 1px solid #468fbb;
 }
 .issues-edit{
@@ -698,4 +701,61 @@ input::placeholder{
 
 .CodeMirror{
     height: 100%;
+}
+
+/* issue detail page */
+.post-header .h2{
+    text-align: center;
+}
+.post-header .label{
+    margin-right: .875rem;
+    border-radius: 0;
+}
+.post-info{
+    color: rgba(39,54,78,0.6);
+    margin-top: 1rem;
+    font-size: .75rem;
+    margin-bottom: 2rem;
+}
+.post-info .timeago, .post-info .post-watch, .post-info span, .comments-item > a, .comments-item .comment-info{
+    display: inline-block;
+}
+.post-info span{
+    margin-right: 3px;
+    color: #e0e0e0;
+}
+.post-info .timeago, .post-info .post-watch{
+    margin-right: 10px;
+}
+.post-body{
+    padding-bottom: 2rem;
+}
+.comments-item .avatar{
+    width: 50px;
+    height: 50px;
+}
+.comments-item > a{
+    text-align: center;
+}
+.comments-item .comment-num, .comments-item .comment-info span{
+    display: block;
+}
+.comments-item .comment-info{
+    padding-left: 1.5rem;
+}
+.comments-item .comment-info .date{
+    padding: 0;
+    font-size: .875rem;    
+}
+.comments-item .comment-info .text{
+   font-size: 1rem;
+}
+.comments-item .comment-info .author{
+    font-size: 1.2rem;
+}
+.comments-list .reply{
+    text-align: right;
+}
+.login-to-comment{
+    margin: 1rem 0 3rem;
 }
