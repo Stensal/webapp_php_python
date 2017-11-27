@@ -5,7 +5,8 @@ if( file_exists(__DIR__.'/github-auth-config.php') ){
     exit('local github auth config required!');
 }
 
-require(__DIR__.'/github-auth-class.php');
+require_once(__DIR__.'/session.php');
+require_once(__DIR__.'/github-auth-class.php');
 $auth = new githubAuth();
 ?>
 <!DOCTYPE html>
@@ -38,7 +39,7 @@ $auth = new githubAuth();
 
         <h3>Session</h3>
         <pre>
-            <?php print_r($_SESSION);?>
+            <?php print_r(session_list_all());?>
         </pre>
     </div>
 <?php else: ?>
