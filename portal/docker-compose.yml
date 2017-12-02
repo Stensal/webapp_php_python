@@ -4,15 +4,27 @@ version: "3"
 services:
   web:
     build: ./app
+    container_name: portal_web
     command: python3 /data/app/app.py -c dev
     volumes:
       - ./app:/data/app
     ports:
       - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      - redis
+    # healthcheck:
+    #   test: "curl -f http://localhost:8080"
+    #   interval: 20s
+    #   timeout: 10s
+    #   retries: 3
 
   redis:
     image: "redis:latest"
     container_name: redis
+    volumes:
+     - ./redis:/data
+    restart: always
 
   db:
     image: "mysql:5"
@@ -22,6 +34,7 @@ services:
       - ./db/etc/mysql:/etc/mysql
     ports:
       - "3306:3306"
+    restart: unless-stopped
     environment:
       - MYSQL_DATABASE=stensal_web
       - MYSQL_ROOT_PASSWORD=dec2017t@

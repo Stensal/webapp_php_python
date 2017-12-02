@@ -19,7 +19,7 @@ bp = Blueprint('root_bp', __name__, template_folder='templates')
 @bp.route('/', methods=['POST', 'GET'])
 @jview('index.html')
 def index():
-    return {}
+    return {'title': ''}
 
 @bp.route('/demo/', methods=['POST', 'GET'])
 @jview('demo.html')

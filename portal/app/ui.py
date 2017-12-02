@@ -9,15 +9,10 @@ from flask import render_template, request, make_response
 from libs.utils import json_dumps
 import json
 import zlib
+import libs.py6 as py6
 import config
 import six
 
-
-def hexlify(t):
-    if six.PY3:
-        import binascii
-        return binascii.hexlify(t)
-    return t.encode('hex')
 
 def jview(arg):
     if isinstance(arg, str) or isinstance(arg, unicode):
@@ -31,7 +26,7 @@ def jview(arg):
                         result['current_user'] = request.environ['user']
                     if 'debug' not in result:
                         result['debug'] = config._debug_
-                    result['_r'] = hexlify(os.urandom(8))
+                    result['_r'] = py6.hexlify(os.urandom(8))
                     return render_template(tpl_path, **result)
                 return result
             return wrapper

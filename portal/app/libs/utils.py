@@ -8,10 +8,15 @@ import math
 import json
 from decimal import Decimal
 import functools
+import six
+
 
 class CommonJSONEncoder(json.JSONEncoder):
     
     def default(self, obj):
+        if six.PY3:
+            if isinstance(obj, bytes):
+                return obj.decode('utf-8')
         if isinstance(obj, datetime.datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
         if isinstance(obj, datetime.date):

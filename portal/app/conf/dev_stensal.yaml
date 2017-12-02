@@ -17,7 +17,7 @@ dbinfo:
   port: 3306
 
 github:
-  client_id: 10e36b77f0167e63e7a8
+  client_id: bb8ff10fab1ef53bb7d7
   client_secret_file: 
-  client_secret: 625b7854fd63d54ef23b07e54c69396f0640b133
+  client_secret: 3c09c950a922ba1d42e0b3a1f40940564f5b4230
 

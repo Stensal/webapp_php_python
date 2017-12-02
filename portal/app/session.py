@@ -365,7 +365,7 @@ class SessionInterface(flask.sessions.SessionInterface):
 
 class SessionUser(object):
 
-    _keys = ('openid', 
+    _keys = ('unified_id', 
              'user_info',)
 
 
@@ -426,7 +426,7 @@ class SessionUser(object):
 
     @property
     def authenticated(self):
-        if self.openid and self.user_info:
+        if self.unified_id and self.user_info:
             return True
         return False
 

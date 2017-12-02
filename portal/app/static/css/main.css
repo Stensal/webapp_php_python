@@ -329,7 +329,7 @@ ol, ul{
 
 /* homepage content */
 .content{
-	padding-top: 28px;
+	padding-top: 62px;
 }
 
 .banner{
@@ -503,6 +503,15 @@ ol, ul{
 }
 .demo-header li{
 	width: 165px;
+	vertical-align: top;
+}
+.demo-header li
+{
+    height: 70px;
+}
+.demo-header li > a 
+{
+    height: 100%;
 }
 .demo-header .nav-item{
     line-height: 1.4;
@@ -677,7 +686,7 @@ input::placeholder{
 	display: none;
 }
 #content{
-	margin-top: 64px;
+	margin-top: 62px;
 }
 .edit-box{
 	margin-bottom: 2rem;

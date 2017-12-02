@@ -26,6 +26,9 @@ app.debug = True
 
 blueprints = (
 
+    # users area, signup/profile edit/logout, etc.
+    ('users.views.bp', '/users'),
+
     # 带版本的静态文件
     ('static_views.static_bp', '/v'),
 

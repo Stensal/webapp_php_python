@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>{% if forward %}
+      location.href = {{ forward_json|safe }};
+    {% endif %}</script>
+  </head>
+
+  <body>
+    {% if err %}
+    <p><span>{{ err }}</span>
+      <a href="/">Back</a>
+    {% endif %}
+  </body>
+
+</html>
+

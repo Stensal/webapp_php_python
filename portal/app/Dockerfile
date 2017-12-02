@@ -1,5 +1,6 @@
 
 FROM python:3-jessie
+LABEL app=portal_web
 
 COPY requirements.txt /var
 RUN pip3 install -r /var/requirements.txt

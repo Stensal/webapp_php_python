@@ -17,8 +17,8 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="/static/css/main.css" rel="stylesheet">
-    <link href="/static/css/responsive.css" rel="stylesheet">
+    <link href="/v/20171202/static/css/main.css" rel="stylesheet">
+    <link href="/v/20171202/static/css/responsive.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="/static/js/hover.zoom.js"></script>
@@ -54,7 +54,7 @@
 	  {% for href, name in [("/products/", "Products"), ("/demo/", "Demo"), ("/issues/", "Issues")] %}
           <li><a href="{{ href }}"{% if active == name %} class="active"{% endif %}>{{ name }}</a></li>
 	  {% endfor %}
-          <li><a href="/users/signup/" class="primary signup">Sign Up</a>
+          <li><a href="/users/" class="primary signup">Sign Up</a>
           </li>
         </ul>
       </div>
@@ -63,6 +63,11 @@
 
     {% block body %}
     {% endblock %}
+
+    <!-- Bootstrap core JavaScript
+     ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/bootstrap.min.js"></script>
 
   </body>
 

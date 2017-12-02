@@ -1,256 +1,158 @@
 {% extends "base.html" %}
 
 {% block body %}
-   <!-- content section -->
+<!-- content section -->
 
-	<main class="content issues">
-		<div class="text-center">
-			<h1 class="h1 mb20">Issues</h1>
-			<p>Issues we are helping to fix</p>
-		</div>
-		<div class="container">
-			<section class="issues-sec issues-labels">
-				<div class="issues-labels-inner clearfix container">
-					<ul class="label-list list-inline pull-left">
-						<li class="label-item"><a href="#" class="label-link current">Picked</a></li>
-						<li class="label-item"><a href="#" class="label-link">Redis</a></li>
-						<li class="label-item"><a href="#" class="label-link">Tensorflow</a></li>
-						<li class="label-item"><a href="#" class="label-link">BitCoin</a></li>
-						<li class="label-item"><a href="#" class="label-link">OpenCV</a></li>
-					</ul>
-					<div class="">
-						<a href="#" class="edit-link pull-right">
-							<i class="fa fa-pencil"></i>
-						</a>
-						<form action="#" class="search-box pull-right">
-							<a href="#" class="search-icon">
-								<i class="fa fa-search"></i>
-							</a>
-							<input type="text" class="search-input" placeholder="Search Issues">
-						</form>
-						
-					</div>
-					<span id="tab-collapse">Category <i class="fa fa-caret-down"></i></span>
-				</div>
-				</section>
-			</div>
-			<div class="container">
-				<ul class="issues-list">
-					<li class="issues-item issues-sec">
-						<p class="issues-author">
-							<a href="#">
-								<img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-								<span class="author">Xing Zhang</span>
-							</a>
-							<span class="date">3 days ago</span>
-						</p>
-						<h4 class="h4 title">
-							<span class="label">Redis</span>
-							<a href="#" class="title-text">Memory leak in rowRange?</a>
-						</h4>
-					</li>
-					<li class="issues-item issues-sec">
-						<p class="issues-author">
-							<a href="#">
-								<img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-								<span class="author">Xing Zhang</span>
-							</a>
-							<span class="date">3 days ago</span>
-						</p>
-						<h4 class="h4 title">
-							<span class="label">Redis</span>
-							<a href="#" class="title-text">Memory leak in rowRange?</a>
-						</h4>
-					</li>
-					<li class="issues-item issues-sec">
-						<p class="issues-author">
-							<a href="#">
-								<img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-								<span class="author">Xing Zhang</span>
-							</a>
-							<span class="date">3 days ago</span>
-						</p>
-						<h4 class="h4 title">
-							<span class="label">Redis</span>
-							<a href="#" class="title-text">Memory leak in rowRange?</a>
-						</h4>
-					</li>
-					<li class="issues-item issues-sec">
-						<p class="issues-author">
-							<a href="#">
-								<img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-								<span class="author">Xing Zhang</span>
-							</a>
-							<span class="date">3 days ago</span>
-						</p>
-						<h4 class="h4 title">
-							<span class="label">Redis</span>
-							<a href="#" class="title-text">Memory leak in rowRange?</a>
-						</h4>
-					</li>
-					<li class="issues-item issues-sec">
-						<p class="issues-author">
-							<a href="#">
-								<img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-								<span class="author">Xing Zhang</span>
-							</a>
-							<span class="date">3 days ago</span>
-						</p>
-						<h4 class="h4 title">
-							<span class="label">Redis</span>
-							<a href="#" class="title-text">Memory leak in rowRange?</a>
-						</h4>
-					</li>
-					<li class="issues-item issues-sec">
-						<p class="issues-author">
-							<a href="#">
-								<img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-								<span class="author">Xing Zhang</span>
-							</a>
-							<span class="date">3 days ago</span>
-						</p>
-						<h4 class="h4 title">
-							<span class="label">Redis</span>
-							<a href="#" class="title-text">Memory leak in rowRange?</a>
-						</h4>
-					</li>
-					<li class="issues-item issues-sec">
-						<p class="issues-author">
-							<a href="#">
-								<img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-								<span class="author">Xing Zhang</span>
-							</a>
-							<span class="date">3 days ago</span>
-						</p>
-						<h4 class="h4 title">
-							<span class="label">Redis</span>
-							<a href="#" class="title-text">Memory leak in rowRange?</a>
-						</h4>
-					</li>
-				</ul>
-				<nav aria-label="Page navigation" class="text-center">
-				  <ul class="pagination">
-				    <li class="disabled">
-				      <a href="#" aria-label="Previous">
-				        <span aria-hidden="true">&laquo;</span>
-				      </a>
-				    </li>
-				    <li class="active"><a href="#">1</a></li>
-				    <li><a href="#">2</a></li>
-				    <li><a href="#">3</a></li>
-				    <li><a href="#">4</a></li>
-				    <li><a href="#">5</a></li>
-				    <li>
-				      <a href="#" aria-label="Next">
-				        <span aria-hidden="true">&raquo;</span>
-				      </a>
-				    </li>
-				  </ul>
-				</nav>
-			</div>
-		</div>
-	</main>
+<main class="content issues">
+  <div class="text-center">
+    <h1 class="h1 mb20">Issues</h1>
+    <p>Issues we are helping to fix</p>
+  </div>
+  <div class="container">
+    <section class="issues-sec issues-labels">
+      <div class="issues-labels-inner clearfix container">
+	<ul class="label-list list-inline pull-left">
+	  <li class="label-item"><a href="#" class="label-link current">Picked</a></li>
+	  <li class="label-item"><a href="#" class="label-link">Redis</a></li>
+	  <li class="label-item"><a href="#" class="label-link">Tensorflow</a></li>
+	  <li class="label-item"><a href="#" class="label-link">BitCoin</a></li>
+	  <li class="label-item"><a href="#" class="label-link">OpenCV</a></li>
+	</ul>
+	<div class="">
+	  <a href="#" class="edit-link pull-right">
+	    <i class="fa fa-pencil"></i>
+	  </a>
+	  <form action="#" class="search-box pull-right">
+	    <a href="#" class="search-icon">
+	      <i class="fa fa-search"></i>
+	    </a>
+	    <input type="text" class="search-input" placeholder="Search Issues">
+	  </form>
+	  
+	</div>
+	<span id="tab-collapse">Category <i class="fa fa-caret-down"></i></span>
+      </div>
+    </section>
+  </div>
+  <div class="container">
+    <ul class="issues-list">
+      <li class="issues-item issues-sec">
+	<p class="issues-author">
+	  <a href="#">
+	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	    <span class="author">Xing Zhang</span>
+	  </a>
+	  <span class="date">3 days ago</span>
+	</p>
+	<h4 class="h4 title">
+	  <span class="label">Redis</span>
+	  <a href="#" class="title-text">Memory leak in rowRange?</a>
+	</h4>
+      </li>
+      <li class="issues-item issues-sec">
+	<p class="issues-author">
+	  <a href="#">
+	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	    <span class="author">Xing Zhang</span>
+	  </a>
+	  <span class="date">3 days ago</span>
+	</p>
+	<h4 class="h4 title">
+	  <span class="label">Redis</span>
+	  <a href="#" class="title-text">Memory leak in rowRange?</a>
+	</h4>
+      </li>
+      <li class="issues-item issues-sec">
+	<p class="issues-author">
+	  <a href="#">
+	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	    <span class="author">Xing Zhang</span>
+	  </a>
+	  <span class="date">3 days ago</span>
+	</p>
+	<h4 class="h4 title">
+	  <span class="label">Redis</span>
+	  <a href="#" class="title-text">Memory leak in rowRange?</a>
+	</h4>
+      </li>
+      <li class="issues-item issues-sec">
+	<p class="issues-author">
+	  <a href="#">
+	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	    <span class="author">Xing Zhang</span>
+	  </a>
+	  <span class="date">3 days ago</span>
+	</p>
+	<h4 class="h4 title">
+	  <span class="label">Redis</span>
+	  <a href="#" class="title-text">Memory leak in rowRange?</a>
+	</h4>
+      </li>
+      <li class="issues-item issues-sec">
+	<p class="issues-author">
+	  <a href="#">
+	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	    <span class="author">Xing Zhang</span>
+	  </a>
+	  <span class="date">3 days ago</span>
+	</p>
+	<h4 class="h4 title">
+	  <span class="label">Redis</span>
+	  <a href="#" class="title-text">Memory leak in rowRange?</a>
+	</h4>
+      </li>
+      <li class="issues-item issues-sec">
+	<p class="issues-author">
+	  <a href="#">
+	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	    <span class="author">Xing Zhang</span>
+	  </a>
+	  <span class="date">3 days ago</span>
+	</p>
+	<h4 class="h4 title">
+	  <span class="label">Redis</span>
+	  <a href="#" class="title-text">Memory leak in rowRange?</a>
+	</h4>
+      </li>
+      <li class="issues-item issues-sec">
+	<p class="issues-author">
+	  <a href="#">
+	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	    <span class="author">Xing Zhang</span>
+	  </a>
+	  <span class="date">3 days ago</span>
+	</p>
+	<h4 class="h4 title">
+	  <span class="label">Redis</span>
+	  <a href="#" class="title-text">Memory leak in rowRange?</a>
+	</h4>
+      </li>
+    </ul>
+    <nav aria-label="Page navigation" class="text-center">
+      <ul class="pagination">
+	<li class="disabled">
+	  <a href="#" aria-label="Previous">
+	    <span aria-hidden="true">&laquo;</span>
+	  </a>
+	</li>
+	<li class="active"><a href="#">1</a></li>
+	<li><a href="#">2</a></li>
+	<li><a href="#">3</a></li>
+	<li><a href="#">4</a></li>
+	<li><a href="#">5</a></li>
+	<li>
+	  <a href="#" aria-label="Next">
+	    <span aria-hidden="true">&raquo;</span>
+	  </a>
+	</li>
+      </ul>
+    </nav>
+  </div>
+</div>
+</main>
 
-    <!-- +++++ Footer Section +++++ -->
-    
-    <footer class="footer">
-        <div class="container">
-        	<div class="row">
-        		<div class="col-sm-2 col-md-2 col-xs-4">
-        			<div class="list">
-        			    <h2>Product</h2>
-        			    <ul>
-        			        <li class="footer-link">
-        			            <a href="/downloads#sec-desktop">Desktop</a>
-        			        </li>
-        			        <li class="footer-link">
-        			            <a href="/downloads#sec-mobile">Apps</a>
-        			        </li>
-        			        <li class="footer-link">
-        			            <a href="/sketch">Sketch Plugin</a>
-        			        </li>
-        			        <li class="footer-link">
-        			            <a href="/forum/update">Updates</a>
-        			        </li>
-        			    </ul>
-        			</div>
-        		</div>
-        		<div class="col-sm-2 col-md-2 col-xs-4">
-        			<div class="list">
-	        		    <h2>Help</h2>
-	        		    <ul>
-	        		        <li>
-	        		            <a href="/tutorials">Tutorials</a>
-	        		        </li>
-	        		        <li class="footer-link">
-	        		            <a href="/forum">Forum</a>
-	        		        </li>
-	        		        <li>
-	        		            <a href="/posts/faqs">FAQs</a>
-	        		        </li>
-	        		        <li>
-	        		            <a href="https://www.gitbook.com/book/annhanhan/mockingbot/details" target="_blank">Free eBook</a>
-	        		        </li>
-	        		    </ul>
-	        		</div>
-        		</div>
-        		<div class="col-sm-2 col-md-2 col-xs-4">
-        			<div class="list">
-	        		    <h2>About</h2>
-	        		    <ul>
-	        		        <li>
-	        		            <a href="/tos">Terms</a>
-	        		        </li>
-	        		        <li>
-	        		            <a href="/privacy">Privacy</a>
-	        		        </li>
-	        		        <li>
-	        		            <a href="https://www.lagou.com/gongsi/j121869.html" target="_blank">Jobs</a>
-	        		        </li>
-	        		    </ul>
-	        		</div>
-        		</div>
-        		<div class="col-sm-4 col-sm-offset-2 col-md-3 col-md-offset-3 col-xs-12">
-        			<div class="contact">
-	        		    <h2>Contact Us</h2>
-	        		    <ul class="list-inline">
-	        		        <li>
-	        		            <a class="medium" href="https://medium.com/@mockingbot/latest" target="_blank">
-	        		                <i class="fa fa-medium" aria-hidden="true"></i>
-	        		            </a>
-	        		        </li>
-	        		        <li>
-	        		            <a class="dribble" href="https://dribbble.com/mockingbot" target="_blank">
-	        		               <i class="fa fa-dribbble" aria-hidden="true"></i>
-	        		            </a>
-	        		        </li>
-	        		        <li>
-	        		            <a href="https://www.facebook.com/mockingbotapp" target="_blank">
-	        		                <i class="fa fa-facebook" aria-hidden="true"></i>
-	        		            </a>
-	        		        </li>
-	        		        <li>
-	        		            <a href="https://twitter.com/mockingbot" target="_blank">
-	        		                <i class="fa fa-twitter" aria-hidden="true"></i>
-	        		            </a>
-	        		        </li>
-	        		    </ul>
-	        		    <p>Email: <a href="mailto:support@mockingbot.com">support@stensal.cc</a>
-	        		    </p>
-	        		</div>
-        		</div>
-        	</div>
-        </div>
-        <div class="copyright text-center">© 2012-2017 Stensal<span class="em-dash"> — </span>
-		    <a href="https://modao.cc/">Smart C/C++ complier for quick debug</a>
-		</div>
-    </footer>
+{% include "_footer.html" %}
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/static/js/bootstrap.min.js"></script>
     <script>
     	$(function(){
     		var top1 = $(".issues-labels").offset().top;
