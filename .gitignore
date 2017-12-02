@@ -1,2 +1,5 @@
 .idea/
 mysql/data/
+__pycache__
+*.pyc
+mysql_data

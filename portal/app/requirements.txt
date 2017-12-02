@@ -1,0 +1,7 @@
+pyYAML
+tornado
+qrcode
+redis
+flask
+pymysql
+six

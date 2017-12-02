@@ -1,0 +1,23 @@
+#-*- coding: utf-8 -*-
+
+cookie_name: stensal_web_p_ss_id
+
+session_storage:
+  redis:
+    host: redis
+    port: 6379
+    db: 2
+
+dbinfo:
+  host: db_mysql
+  user: root
+  password: "dec2017t@"
+  db: stensal_web
+  charset: utf8mb4
+  port: 3306
+
+github:
+  client_id: bb8ff10fab1ef53bb7d7
+  client_secret_file: 
+  client_secret: 3c09c950a922ba1d42e0b3a1f40940564f5b4230
+
