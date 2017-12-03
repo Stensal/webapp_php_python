@@ -1,8 +1,11 @@
-pyYAML
-tornado
+pyYAML>=3
+tornado>=4
 qrcode
-redis
+redis>=2.8
 flask
 pymysql
-requests
+requests>=2
 six
+sqlalchemy>=1.1
+pycrypto
+paramiko

@@ -8,6 +8,11 @@ session_storage:
     port: 6379
     db: 2
 
+cache:
+  redis:
+    host: redis
+    db: 3
+
 dbinfo:
   host: db_mysql
   user: root

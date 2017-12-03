@@ -54,7 +54,15 @@
 	  {% for href, name in [("/products/", "Products"), ("/demo/", "Demo"), ("/issues/", "Issues")] %}
           <li><a href="{{ href }}"{% if active == name %} class="active"{% endif %}>{{ name }}</a></li>
 	  {% endfor %}
-          <li><a href="/users/" class="primary signup">Sign Up</a>
+          <li>
+	    {% if current_user and current_user.authenticated %}
+	    <a href="/users/" class="signup">
+	      <img class="avatar" src="{{ current_user.user_info.github_user.avatar_url }}"/>
+	      {{ current_user.user_info.display_name }}
+	    </a>
+	    {% else %}
+	    <a href="/users/" class="primary signup">Sign Up</a>
+	    {% endif %}
           </li>
         </ul>
       </div>

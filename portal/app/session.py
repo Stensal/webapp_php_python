@@ -365,7 +365,8 @@ class SessionInterface(flask.sessions.SessionInterface):
 
 class SessionUser(object):
 
-    _keys = ('unified_id', 
+    _keys = ('user_id',
+             'unified_id', 
              'user_info',)
 
 
@@ -422,11 +423,13 @@ class SessionUser(object):
 
     @property
     def user_label(self):
-        return self.user_info['uni_email'] if self.authenticated else u''
+        if self.authenticated:
+            label = self.user_info.get('display_name', '')
+        return label or '$SessionUser.noname'
 
     @property
     def authenticated(self):
-        if self.unified_id and self.user_info:
+        if self.user_id and self.user_info:
             return True
         return False
 

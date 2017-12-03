@@ -12,6 +12,7 @@ import zlib
 import libs.py6 as py6
 import config
 import six
+from session import current_user
 
 
 def jview(arg):
@@ -27,6 +28,7 @@ def jview(arg):
                     if 'debug' not in result:
                         result['debug'] = config._debug_
                     result['_r'] = py6.hexlify(os.urandom(8))
+                    result['current_user'] = current_user
                     return render_template(tpl_path, **result)
                 return result
             return wrapper

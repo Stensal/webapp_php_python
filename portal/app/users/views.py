@@ -7,6 +7,7 @@ _dir = os.path.dirname(os.path.abspath(__file__))
 _appdir = os.path.abspath(os.path.join(_dir, '..'))
 
 import logging
+import uuid
 from flask import Blueprint, request, redirect, abort
 from flask import make_response, render_template
 from flask import send_file
@@ -16,8 +17,10 @@ import libs.mysql_helper as my
 import libs.py6 as py6
 import users.github_auth as github
 from libs.utils import json_dumps
-from users.helper import login_required, denied
+from users.helper import login_required, denied, user_cache
 from session import session, current_user
+from models.helper import orm_session
+from models.user import UserInfo, UserLog, GithubUser
 
 
 modpath = os.path.relpath(os.path.abspath(__file__), _appdir)
@@ -105,10 +108,38 @@ def github_oauth_callback():
     github_user = github.get_user(a_token)
     if not github_user:
         return cb_abort(403, 'Failed to get user.')
+
+    # -- register this github user --
+    unified_id = uuid.uuid4().hex
+    github_id = github_user['id']
+    sess = orm_session()
+    guser = sess.query(GithubUser) \
+                .filter_by(github_id=github_id).all()
+    guser = guser[0] if len(guser) else None
+    if not guser:
+        luser = UserInfo(unified_id=unified_id,
+                         display_name=github_user['login'])
+        sess.add(luser)
+        sess.commit()
+        guser = GithubUser(user_id=luser.user_id)
+        guser.github_id = github_user['id']
+        sess.add(guser)
+        logger.debug('new user from github has been registered.')
+    guser.login_name = github_user['login']
+    guser.html_url = github_user['html_url']
+    guser.avatar_url = github_user['avatar_url']
+    guser.profile_json = json_dumps(github_user)
+    guser.token_json = json_dumps(token_d)
+    sess.commit()
+    logger.debug("user's profile has been updated.")
+    # -------------------------------
+
     user_d = {
+        'display_name': github_user['login'],
         'github_user': github_user
     }
-    current_user.unified_id = py6.hexlify(os.urandom(8))
+    current_user.user_id = guser.user_id
+    current_user.unified_id = unified_id
     current_user.user_info = user_d
     current_user.save_to_session()
     # --
