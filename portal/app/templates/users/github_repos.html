@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block header %}
+
+<link href="/v/20171202/static/users/users.css" rel="stylesheet">
+
+{% endblock %}
+
+
+{% block body %}
+
+<!-- content section -->
+
+<main class="content users signup">
+  <div class="text-center">
+    <h1 class="h1 mb20">Welcome!</h1>
+    <p>Let's start this great trip now.</p>
+  </div>
+  <div class="container">
+
+    <div>
+      <!-- {{ repos_json|safe }} -->
+      <ul>
+      {% for repo in repos %}
+      <li><strong>{{ repo.name }}</strong> 
+	<i>{{ repo.full_name }}</i></li>
+      {% endfor %}
+      </ul>
+    </div>
+
+    <div>
+      [<a href="/users/">Back</a>] 
+    </div>
+
+  </div>
+</div>
+</main>
+
+{% include "_footer.html" %}
+
+
+{% endblock %}
+

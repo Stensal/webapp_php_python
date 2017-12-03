@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block header %}
+
+<link href="/v/20171202/static/users/users.css" rel="stylesheet">
+<script>
+  var githubStart = function(){
+    var servPrefix = location.protocol + '//' + location.host;
+    var url = '/users/github/oauth_start/?serv_prefix='+encodeURIComponent(servPrefix);
+    location.href = url;
+  };
+</script>
+
+{% endblock %}
+
+
+{% block body %}
+
+<!-- content section -->
+
+<main class="content users signup">
+  <div class="text-center">
+    <h1 class="h1 mb20">Sign Up</h1>
+    <p>Let's start this great trip now.</p>
+  </div>
+  <div class="container">
+
+    <div class="nav navbar-nav">
+      <li><a href="javascript:;" onClick="githubStart()">Sign in with Github</a></li>
+    </div>
+
+  </div>
+</div>
+</main>
+
+{% include "_footer.html" %}
+
+
+{% endblock %}
+

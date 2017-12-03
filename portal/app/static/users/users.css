@@ -1,0 +1,9 @@
+/* -*- coding: utf-8 -*- */
+
+.users > .container
+{
+    min-height: 600px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 20px 0px 40px 0px;
+}
