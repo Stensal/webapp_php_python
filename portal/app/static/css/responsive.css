@@ -1,0 +1,251 @@
+@media (min-width: 1024px){
+	.products .img-banner{
+		width: 1000px;
+	}
+	.sec3 .right{
+		padding-left: 40px;
+	}
+
+}
+ .issues-fixed{
+	left: 0;
+	right: 0;
+}
+.img-banner .img-device{
+	margin-right: -15px;
+	float: right;
+}
+@media (max-width: 767px){
+	.h2{
+		font-size: 1.5rem !important;
+	}
+	.h2-products{
+		font-size: 1.25rem !important;
+	}
+	.img-banner p{
+		font-size: 0.625rem;
+	}
+	.products .img-logo{
+		width: 3rem;
+	}
+	.img-banner .copy{
+		margin-top: -2rem;
+	}
+	.products .main-banner{
+		height: 390px;
+	}
+	.products .img-banner{
+		width: 90%;
+		height: 250px;
+	}
+	.navbar-nav{
+		background-color: #000;
+		margin-top: 0;
+	}
+	.navbar-nav a, .navbar-nav a.primary{
+		color: #ccc;
+	}
+	.navbar-nav a.active, .navbar-nav a.primary.active{
+		color: #fff;
+	}
+	.navbar-nav li a{
+		border-bottom: 1px solid rgba(255,255,255,0.4);
+		text-transform: uppercase;
+	}
+	.navbar-nav a.primary{
+		display: inline-block;
+		margin-top: 0;
+		background-color: transparent;
+    	padding: 10px 15px;
+	}
+	.copyright{
+		line-height: 1;
+		margin-top: 1rem;
+	}
+	.banner .h1{
+		font-size: 1.75rem;
+	}
+	.main-banner .btn-demo{
+		margin: 2rem 0;
+	}
+	.banner{
+		padding: 2rem;
+	}
+	.sec{
+		padding: 2rem 0;
+	}
+	.contact{
+		margin-top: 2rem;
+	}
+	.label-list .label-item{
+		display: block;
+		padding-bottom: 10px;
+	}
+	.label-list .label-item:first-child, .demo-nav li:first-child{
+		padding-left: 5px;
+	}
+	.issues-labels-inner{
+		position: relative;
+	}
+	.label-list{
+		position: absolute;
+		background: #fff;
+		box-shadow: 0px 6px 20px 0px rgba(0,0,0,0.1);;
+		top: 100%;
+		padding-top: 6px;
+	    -webkit-transition: -webkit-transform 0.4s ease-in;
+	    transition: -webkit-transform 0.4s ease-in;
+	    transition: transform 0.4s ease-in;
+	    transition: transform 0.4s ease-in, -webkit-transform 0.4s ease-in;
+	    -webkit-transform-origin: 50% 0%;
+	    -ms-transform-origin: 50% 0%;
+	    transform-origin: 50% 0%;
+	    -webkit-transform: scale(0);
+	    -ms-transform: scale(0);
+	    transform: scale(0);
+	}
+	.label-list.show{
+		-webkit-transform: scale(1);
+		-ms-transform: scale(1);
+		transform: scale(1);
+	}
+	
+	#tab-collapse{
+		display: block;
+		height: 34px;
+		line-height: 34px;
+	}
+	.issues-item .title-text{
+	    font-size: 1rem;
+	}
+	.issues-item .title{
+	    white-space: nowrap;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	}
+	.issues-fixed{
+    	left: 0;
+    	right: 0;
+    }
+    .choose{
+    	margin-top: 2rem;
+    	text-align: center;
+    }
+    .run-code label{
+    	display: inline-block;
+    	margin-right: 2rem;
+    }
+    .demo-nav li:first-child{
+    	margin-bottom: 1rem;
+    }
+    .sec-editor{
+    	position: absolute;
+    	top: 260px;
+    	width: 100%;
+    	padding: 15px;
+    }
+    .demo-header{
+    	position: fixed;
+    	top: 58px;
+    	left: 0;
+    	right: 0;
+    	z-index: 1;
+    }
+}
+@media (min-width: 768px){
+	.navbar-header{
+		margin-left: 15px;
+	}
+	.navbar-nav .signup{
+		padding: 12px 30px;
+	}
+	.navbar-nav > li > a{
+	    padding: 12px 20px;
+	}
+	.navbar-nav .signup, .navbar-nav > li > a{
+		margin-top: 4px;
+	}
+	.img-banner .img-device{
+		margin-top: 1.75rem;
+	}
+	.issues-sec{
+	    margin: 0 -20px;
+	}
+	.demo-header .current:before{
+		position: absolute;
+		content: '';
+		left: 50%;
+	    margin-left: -10px;
+	    bottom: -2rem;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-top: 0 dotted transparent;
+		border-bottom: 10px solid #fff;
+	}
+	.run-code{
+		position: relative;
+	}
+	.run-code, .run-code .right-in{
+		margin-left: 33%;
+	}
+	.run-code .left-in{
+	    width: 30%;
+    	position: absolute;
+	}
+	.sec-editor{
+		margin: 0 0;
+		position: absolute;
+		top: 140px;
+		bottom: 0;
+		left: 0px;
+		right: 0px;
+		padding:15px;
+		overflow: auto;
+	}
+	.sec-editor .right{
+		position: fixed;
+		top: 218px;
+		right: 30px;
+		bottom: 3rem;
+		overflow: auto;
+		padding-left: 30px;
+	}
+	.scode,.sec-editor .right{
+		width: 50%;
+	}
+	.demo{
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 62px;
+		bottom: 0;
+	}
+	.sec-editor .scode{
+		padding-right: 15px;
+	}
+}
+@media (min-width: 768px){
+	.img-banner .copy{
+		margin-left: 2rem;
+	}
+}
+@media (max-width: 991px){
+	.card .desc, .footer a, .copyright, .main-banner .subtitle{
+		font-size: .75rem;
+	}
+	.issues-sec .edit-link{
+		margin-left: .5rem;
+	}
+}
+@media(max-width: 375px){
+	.demo-header .nav-item{
+		padding: 6px 16px;
+		font-size: 12px;
+	}
+	.demo-header li{
+		width: 142px;
+	}
+}
+@media (min-width: 768px and max-width: 991px){
+
+}

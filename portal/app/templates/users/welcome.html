@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block header %}
+
+<link href="/v/20171202/static/users/users.css" rel="stylesheet">
+
+{% endblock %}
+
+
+{% block body %}
+
+<!-- content section -->
+
+<main class="content users signup">
+  <div class="text-center">
+    <h1 class="h1 mb20">Welcome!</h1>
+    <p>Let's start this great trip now.</p>
+  </div>
+  <div class="container">
+
+    you already logined.
+
+    <div>{{ user_info_json|safe }}</div>
+
+    <div>
+      [<a href="/users/github/repos/">Repos</a>] 
+      [<a href="/users/logout/">Logout</a>]
+    </div>
+
+  </div>
+</div>
+</main>
+
+{% include "_footer.html" %}
+
+
+{% endblock %}
+
