@@ -29,6 +29,8 @@ import logging
 COOKIE_NAME = config.cookie_name
 
 def _create_redis_pool():
+    if 'redis' not in config.session_storage:
+        return
     if 'unix_socket' in config.session_storage['redis']:
         _path = config.session_storage['redis']['unix_socket']
         return redis.ConnectionPool(
@@ -256,7 +258,7 @@ class SessionStorageImpdByFile(object):
         data_path = os.path.join(self.folder, session_id)
         if len(session_dict) >= 1:
             with open(data_path, 'wb+') as f:
-                f.write(json_dumps(session_dict))
+                f.write(json_dumps(session_dict).encode('utf-8'))
                 f.close()
         else:
             if os.access(data_path, os.F_OK):
@@ -281,10 +283,16 @@ class SessionStorageImpdByFile(object):
 #class SessionStorage(SessionStorageImpdByRedis): pass
 #class SessionStorage(SessionStorageImpdByFile): pass
 
-if config._debug_:
-    class SessionStorage(SessionStorageImpdBySqlite): pass
+# if config._debug_:
+#     class SessionStorage(SessionStorageImpdBySqlite): pass
+# else:
+#     class SessionStorage(SessionStorageImpdByRedis): pass
+
+    
+if 'redis' in config.session_storage:
+    SessionStorage = SessionStorageImpdByRedis
 else:
-    class SessionStorage(SessionStorageImpdByRedis): pass
+    SessionStorage = SessionStorageImpdByFile
 
 
 class StandaloneSession(object):

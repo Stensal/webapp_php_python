@@ -21,6 +21,11 @@ bp = Blueprint('root_bp', __name__, template_folder='templates')
 def index():
     return {'title': ''}
 
+@bp.route('/privacy/', methods=['POST', 'GET'])
+@jview('privacy.html')
+def privacy():
+    return {'title': 'Privacy', 'active': 'Privacy'}
+
 @bp.route('/demo/', methods=['POST', 'GET'])
 @jview('demo.html')
 def demo():

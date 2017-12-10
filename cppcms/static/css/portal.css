@@ -1,0 +1,21 @@
+/* -*- coding: utf-8 -*- */
+
+body > .content {
+    margin-top: 73px;
+}
+
+.navbar img.avatar
+{
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+.users > .container
+{
+    min-height: 600px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 20px 0px 40px 0px;
+}
+

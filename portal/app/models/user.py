@@ -77,7 +77,8 @@ class UserLog(Base):
     remark = Column(String(120))
 
 
-Base.metadata.create_all(bind=engine, checkfirst=True)
+# Base.metadata.create_all(bind=engine, checkfirst=True)
+
 
 if __name__ == '__main__':
     sess = orm_session(autocommit=False)

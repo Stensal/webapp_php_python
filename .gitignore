@@ -4,3 +4,5 @@ __pycache__
 *.pyc
 mysql_data
 *.rdb
+sessions
+*.tmp
