@@ -1,0 +1,28 @@
+
+version: "2"
+
+services:
+  tests_web:
+    build: ./app
+    container_name: portal_web_tests
+    command: python3 /data/app/tests/test_main.py -c tests
+    volumes:
+      - ./app:/data/app
+    restart: "no"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - tests_db
+
+  tests_db:
+    image: "mysql:5"
+    container_name: "db_mysql_tests"
+    volumes:
+      - ./db/test-data:/data
+      - ./db/etc/mysql:/etc/mysql
+    restart: "no"
+    environment:
+      - MYSQL_DATABASE=stensal_web
+      - MYSQL_ROOT_PASSWORD=dec2017t@
+
+

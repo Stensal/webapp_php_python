@@ -41,21 +41,3 @@ def products():
 def issues():
     return {'title': 'Issues', 'active': 'Issues'}
 
-@bp.route('/db_test/', methods=['POST', 'GET'])
-@json_view
-def do_a_db_test():
-    conn, cur = None, None
-    rows = []
-    try:
-        conn = my.connect(**config.dbinfo)
-        cur = conn.cursor()
-        cur.execute("select now() d, '中文' c")
-        rows = cur.fetchall()
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
-    return rows
-
-

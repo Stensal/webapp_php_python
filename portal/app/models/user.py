@@ -13,11 +13,7 @@ import uuid
 from sqlalchemy import Sequence, Column, String, Integer, DateTime
 from sqlalchemy import ForeignKey, Text, BigInteger
 from sqlalchemy import text
-from sqlalchemy.ext.declarative import declarative_base
-from models.helper import engine, orm_session
-
-
-Base = declarative_base()
+from models.helper import engine, orm_session, Base
 
 
 class UserInfo(Base):

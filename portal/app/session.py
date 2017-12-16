@@ -13,11 +13,11 @@ import random
 import redis
 import datetime
 import uuid
-from libs.utils import json_dumps
-try:
-    from Cookie import Cookie as http_cookie
-except ImportError:
-    from http.cookies import SimpleCookie as http_cookie
+from libs.utils import json_dumps, JSONObject
+# try:
+#     from Cookie import Cookie as http_cookie
+# except ImportError:
+#     from http.cookies import SimpleCookie as http_cookie
 import flask
 import config
 import sqlite3
@@ -25,8 +25,10 @@ from werkzeug.local import LocalStack, LocalProxy
 from functools import partial
 import logging
 
+logger = logging.getLogger('session')
 
 COOKIE_NAME = config.cookie_name
+KEY_SESSION_ID = '__session_id__'
 
 def _create_redis_pool():
     if 'redis' not in config.session_storage:
@@ -81,9 +83,8 @@ class SessionStorageImpdByRedis(object):
         session_id = hashlib.sha1(rnd_str).hexdigest()
         # now = datetime.datetime.now()
         # session_id = '%s-%s' % (now.strftime('%Y%m%d%H%M%S'), session_id)
-        session = {
-            '__session_id__': session_id
-            }
+        session = {}
+        session[KEY_SESSION_ID] = session_id
         self.set(session_id, session)
         return session_id, session
 
@@ -209,9 +210,8 @@ class SessionStorageImpdBySqlite(object):
 
     def create(self):
         session_id = uuid.uuid1().hex
-        session = {
-            '__session_id__': session_id
-            }
+        session = {}
+        session[KEY_SESSION_ID] = session_id
         self.set(session_id, session)
         return session_id, session
 
@@ -222,9 +222,6 @@ class SessionStorageImpdByFile(object):
         _dir = os.path.dirname(os.path.abspath(__file__))
         self.folder = os.path.join(_dir, 'sessions')
         self.folder = os.path.abspath(self.folder)
-        # app_startup_dir = os.environ['-wsgi-startup-dir']
-        # self.folder = os.path.join(app_startup_dir, './sessions')
-        # self.folder = os.path.abspath(self.folder)
 
     def _check_folder(self):
         if not os.access(self.folder, os.F_OK):
@@ -239,9 +236,8 @@ class SessionStorageImpdByFile(object):
 
     def get(self, session_id):
         assert session_id
-        session = {
-            '__session_id__': session_id
-            }
+        session = {}
+        session[KEY_SESSION_ID] = session_id
         self._check_folder()
         data_path = os.path.join(self.folder, session_id)
         if os.access(data_path, os.F_OK):
@@ -276,9 +272,9 @@ class SessionStorageImpdByFile(object):
             if not os.access(os.path.join(self.folder, session_id), 
                              os.F_OK):
                 break
-        return session_id, {
-            '__session_id__': session_id
-            }
+        session = {}
+        session[KEY_SESSION_ID] = session_id
+        return session_id, session
 
 #class SessionStorage(SessionStorageImpdByRedis): pass
 #class SessionStorage(SessionStorageImpdByFile): pass
@@ -295,52 +291,39 @@ else:
     SessionStorage = SessionStorageImpdByFile
 
 
-class StandaloneSession(object):
+class Session(dict, JSONObject):
 
-    def __init__(self, session_id, ttl=None):
-        self.session_id = session_id
-        self.storage = SessionStorage(ttl=ttl)
-        self.session = None
-        if self.session_id:
-            self.session = self.storage.get(self.session_id)
-        if not self.session:
-            self.session_id, self.session = self.storage.create()
+    def __init__(self, storage, session_id, session_dict):
+        super(Session, self).__init__()
+        self._storage = storage
+        self.update(session_dict)
+        self._modified = False
 
-    def has_key(self, key):
-        return self.session.has_key(key)
-
-    def __getitem__(self, key):
-        return self.session[key] if key in self.session else None
-
-    def __setitem__(self, key, val):
-        self.session[key] = val
-
-    def __contains__(self, key):
-        return key in self.session
-
-    def __iter__(self):
-        for k in self.session:
-            yield k
-
-    def __delitem__(self, key):
-        if key in self.session:
-            del self.session[key]
-
-    def extend_ttl(self, seconds):
-        self.storage.extend_session_ttl(self.session_id, seconds)
+    def clear(self, pattern=None):
+        all_keys = [k for k in self if k != KEY_SESSION_ID]
+        for k in all_keys:
+            del self[k]
+        self._modified = True
 
     def save(self):
-        self.storage.set(self.session_id, self.session)
+        self._storage.set(self.session_id, self)
 
-    def clear(self):
-        # self.storage.clear(self.session_id)
-        self.session = {
-            '__session_id__': self.session_id
-        }
+    @property
+    def session_id(self):
+        return self[KEY_SESSION_ID]
 
+    @property
+    def modified(self):
+        logger.debug('-- session modified? --')
+        return self._modified or True
 
-def get_session(session_id, ttl=None):
-    return StandaloneSession(session_id, ttl=ttl)
+    @property
+    def user(self):
+        return SessionUser(self)
+
+    def json_object(self):
+        return dict(self)
+
 
 class SessionInterface(flask.sessions.SessionInterface):
 
@@ -349,6 +332,9 @@ class SessionInterface(flask.sessions.SessionInterface):
         self.cookie_path = '/'
         self._session_timeout = ttl
         self.storage = SessionStorage(ttl=ttl)
+
+    def get_cookie_httponly(self, app):
+        return True
     
     def get_cookie_path(self, app):
         return self.cookie_path
@@ -356,20 +342,18 @@ class SessionInterface(flask.sessions.SessionInterface):
     def open_session(self, app, request):
         session_id = request.cookies.get(COOKIE_NAME)
         if not session_id:
-            session_id, session = self.storage.create()
-            return session
+            session_id, session_data = self.storage.create()
         else:
-            return self.storage.get(session_id)
+            session_data = self.storage.get(session_id)
+        return Session(self.storage, session_id, session_data)
 
     def save_session(self, app, session, response):
-        if session and session.has_key('__session_id__'):
-            session_id = session['__session_id__']
-            assert len(session_id)>0
+        if session and KEY_SESSION_ID in session:
+            session_id = session[KEY_SESSION_ID]
             self.storage.set(session_id, session)
             response.set_cookie(COOKIE_NAME, session_id, 
                                 path=self.cookie_path, 
                                 max_age=self._session_timeout)
-
 
 class SessionUser(object):
 
@@ -409,7 +393,7 @@ class SessionUser(object):
     def __getattr__(self, key):
         if key in self.__class__._keys:
             return self.get_value(key)
-        return super(SessionUser, self).__getattr__(key)
+        raise AttributeError(key)
     
     def __setattr__(self, key, value):
         if key in self.__class__._keys:
@@ -444,91 +428,6 @@ class SessionUser(object):
     def save_to_session(self):
         if hasattr(self.session, 'save'):
             self.session.save()
-
-_session_stack = LocalStack()
-
-def _get_attr_of_top(name):
-    top = _session_stack.top
-    if not top:
-        return None
-    return getattr(top, name)
-
-session = LocalProxy(partial(_get_attr_of_top, '_session'))
-current_user = LocalProxy(partial(_get_attr_of_top, '_user'))
-
-class SessionMiddleware(object):
-    
-    def __init__(self, app):
-        self.app = app
-        self._session = None
-        self._user = None
-
-    def __call__(self, *args):
-        try:
-            _session_stack.push(self)
-            return self._call(*args)
-        finally:
-            _session_stack.pop()
-
-    def _call(self, environ, start_response):
-        # ---- no cookies for static contents ----
-        request_path = environ['PATH_INFO']
-        l_path = request_path.lower()
-        is_static = l_path.startswith('/static/')
-        is_static = is_static or l_path.startswith('/v/')
-        if is_static:
-            return self.app(environ, start_response)
-        # ----
-        ua = None
-        if 'HTTP_USER_AGENT' in environ:
-            ua = environ['HTTP_USER_AGENT']
-        ua = ua or ''
-        is_mobi = re.search(r'iphone|android', ua, re.I|re.S)
-        cookies = http_cookie()
-        raw_req_cookies = ''
-        if 'HTTP_COOKIE' in environ:
-            raw_req_cookies = environ['HTTP_COOKIE']
-        try:
-            cookies.load(raw_req_cookies)
-        except Exception as e:
-            logging.error(traceback.format_exc(e))
-            # print >> sys.stderr, '-'*40
-            # print >> sys.stderr, 'cookies load error.'
-            # print >> sys.stderr, e.message
-            # print e.message
-            raise
-        flush_rssid = False # should overwrite rss-id
-        # flush_rssut = False # should overwrite rss-update-time
-        ttl = 3600 * 24 * 3
-        ttl_step = 60 * 30
-        if is_mobi:
-            ttl = 3600 * 24 * 15
-            ttl_step = 3600 * 24 * 7
-        if COOKIE_NAME in cookies: #cookies.has_key(COOKIE_NAME):
-            session_id = cookies[COOKIE_NAME].coded_value
-            session = get_session(session_id, ttl=ttl)
-            if session_id != session.session_id:
-                session_id = session.session_id
-                flush_rssid = True
-            environ['session'] = session
-        else:
-            session = get_session(None, ttl=ttl)
-            session_id = session.session_id
-            environ['session'] = session
-            flush_rssid = True
-        # extend the ttl of session
-        session.extend_ttl(ttl_step)
-        self._session = session
-        self._user = SessionUser(session)
-        environ['user'] = self._user
-        def _start_response(status, headers, exc_info=None):
-            if flush_rssid:
-                max_age = int(ttl * 1.5)
-                rssid_str = '%s=%s; path=/; max-age=%d; httponly' % (
-                    COOKIE_NAME, session_id, max_age)
-                headers.append(('set-cookie', rssid_str))
-            return start_response(status, headers)
-        return self.app(environ, _start_response)
 
 
 if __name__ == '__main__':

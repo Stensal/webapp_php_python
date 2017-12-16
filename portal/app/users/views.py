@@ -11,6 +11,7 @@ import uuid
 from flask import Blueprint, request, redirect, abort
 from flask import make_response, render_template
 from flask import send_file
+from flask import session
 from ui import jview, json_view
 import config
 import libs.mysql_helper as my
@@ -18,9 +19,11 @@ import libs.py6 as py6
 import users.github_auth as github
 from libs.utils import json_dumps
 from users.helper import login_required, denied, user_cache
-from session import session, current_user
+# from session import current_user
 from models.helper import orm_session
 from models.user import UserInfo, UserLog, GithubUser
+import users.services
+from flask import session
 
 
 modpath = os.path.relpath(os.path.abspath(__file__), _appdir)
@@ -31,6 +34,7 @@ bp = Blueprint('users_bp', __name__, template_folder='templates')
 
 @bp.route('/', methods=['POST', 'GET'])
 def user_index():
+    current_user = session.user
     if current_user.authenticated:
         return redirect('/users/welcome/')
     return redirect('/users/signup/')
@@ -39,6 +43,7 @@ def user_index():
 @jview('users/welcome.html')
 @login_required
 def github_user_welcome_page():
+    current_user = session.user
     user_info = current_user.user_info
     return {
         'title': 'Welcome',
@@ -72,7 +77,7 @@ def github_oauth_start():
     session['github_oauth_state'] = state
     session.save()
     fwd_url = github.get_authorize_url(redirect_uri, state=state)
-    return redirect(fwd_url)
+    return redirect(fwd_url, code=302)
 
 def cb_abort(code, text):
     vdata = {
@@ -103,12 +108,20 @@ def github_oauth_callback():
     session['github_access_token'] = token_d
     session.save()
     a_token = token_d['access_token']
+
     # -- get user
-    user_info = current_user.user_info
     github_user = github.get_user(a_token)
     if not github_user:
         return cb_abort(403, 'Failed to get user.')
+    return _process_github_user_reg(github_user, token_d)
 
+def _process_github_user_reg(github_user, token_d):
+    if not github_user or not isinstance(github_user, dict):
+        return abort(400)
+    required_keys = ('id', 'html_url', 'avatar_url', 'login')
+    for k in required_keys:
+        if k not in github_user:
+            return abort(400)
     # -- register this github user --
     unified_id = uuid.uuid4().hex
     github_id = github_user['id']
@@ -138,16 +151,19 @@ def github_oauth_callback():
         'display_name': github_user['login'],
         'github_user': github_user
     }
-    current_user.user_id = guser.user_id
-    current_user.unified_id = unified_id
-    current_user.user_info = user_d
-    current_user.save_to_session()
+    current_user = session.user
+    if current_user:
+        current_user.user_id = guser.user_id
+        current_user.unified_id = unified_id
+        current_user.user_info = user_d
+        current_user.save_to_session()
     # --
     fwd_url = '/users/welcome/'
     return {
         'forward': fwd_url,
         'forward_json': json_dumps(fwd_url),
         'err': None,
+        'user_id': guser.user_id
     }
 
 @bp.route('/github/repos/', methods=['GET'])
@@ -161,8 +177,18 @@ def github_get_user_repos():
     if not a_token:
         return denied(err='Invalid access token.')
     repos = github.get_repos(a_token)
+    current_user = session.user
+    users.services.sync_user_repos(current_user.user_id, repos)
     return {
         'repos': repos,
         'repos_json': json_dumps(repos),
     }
+
+@bp.route('/github/sync_all.<fmt>', methods=['GET', 'POST'])
+@login_required
+def github_sync_all(fmt):
+    fmt = fmt.lower()
+    if fmt not in ('json',):
+        return abort(404)
+    return json_dumps({})
 

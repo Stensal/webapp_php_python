@@ -10,6 +10,7 @@ if _appdir not in sys.path:
 
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 import config
 
 
@@ -22,4 +23,6 @@ Session = sessionmaker(bind=engine)
 
 def orm_session(**kargs):
     return Session(**kargs)
+
+Base = declarative_base()
 
