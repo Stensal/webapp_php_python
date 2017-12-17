@@ -8,7 +8,7 @@
 
     docker-compose up
 
-after contains came up, open in browser: [http://localhost](http://localhost).
+after containers came up, open in browser: [http://localhost](http://localhost).
 
 ## testing
 
