@@ -8,7 +8,8 @@ if _dir not in sys.path:
     sys.path.append(_dir)
 
 logging_conf = {
-    'level': logging.DEBUG
+    'level': logging.DEBUG,
+    'format': '%(name)6s - [%(levelname)s]: %(message)s'
 }
 logging.basicConfig(**logging_conf)
 

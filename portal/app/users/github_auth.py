@@ -10,6 +10,8 @@ import libs.py6 as py6
 _dir = os.path.dirname(os.path.abspath(__file__))
 _appdir = os.path.abspath(os.path.join(_dir, '..'))
 
+from tests.mock_data import github_get_repos_resp
+
 modpath = os.path.relpath(os.path.abspath(__file__), _appdir)
 logger = logging.getLogger(modpath)
 
@@ -61,6 +63,9 @@ def get_user(a_token):
         return d
 
 def get_repos(a_token, page=1, page_size=100):
+    if 'TEST_MODE' in os.environ:
+        d = json.loads(github_get_repos_resp)
+        return d
     params = {
         'access_token': a_token,
         'visibility': 'all', # all|private|public

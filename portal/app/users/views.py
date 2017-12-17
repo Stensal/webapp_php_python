@@ -8,6 +8,7 @@ _appdir = os.path.abspath(os.path.join(_dir, '..'))
 
 import logging
 import uuid
+import json
 from flask import Blueprint, request, redirect, abort
 from flask import make_response, render_template
 from flask import send_file
@@ -17,7 +18,7 @@ import config
 import libs.mysql_helper as my
 import libs.py6 as py6
 import users.github_auth as github
-from libs.utils import json_dumps
+from libs.utils import json_dumps, _int
 from users.helper import login_required, denied, user_cache
 # from session import current_user
 from models.helper import orm_session
@@ -52,9 +53,9 @@ def github_user_welcome_page():
 
 @bp.route('/logout/', methods=['POST', 'GET'])
 def user_logout():
-    session.clear()
+    session.user.clear()
     session.save()
-    return redirect('/')
+    return redirect('/', code=302)
 
 @bp.route('/signup/', methods=['POST', 'GET'])
 @jview('users/signup.html')
@@ -115,6 +116,32 @@ def github_oauth_callback():
         return cb_abort(403, 'Failed to get user.')
     return _process_github_user_reg(github_user, token_d)
 
+def _update_session_user(user_id):
+    s = orm_session()
+    cols = (UserInfo.user_id, \
+            UserInfo.unified_id, \
+            UserInfo.display_name, \
+            GithubUser.github_id, \
+            GithubUser.token_json, \
+            GithubUser.profile_json)
+    user = s.query(*cols) \
+            .filter(UserInfo.user_id == user_id) \
+            .one_or_none()
+    if not user:
+        return
+    github_user = json.loads(user.profile_json)
+    token_d = json.loads(user.token_json)
+    user_d = {
+        'display_name': github_user['login'],
+        'github_user': github_user,
+        'github_token': token_d,
+    }
+    session.user.user_id = user.user_id
+    session.user.unified_id = user.unified_id
+    session.user.user_info = user_d
+    session.user.save_to_session()
+    return user
+
 def _process_github_user_reg(github_user, token_d):
     if not github_user or not isinstance(github_user, dict):
         return abort(400)
@@ -123,13 +150,13 @@ def _process_github_user_reg(github_user, token_d):
         if k not in github_user:
             return abort(400)
     # -- register this github user --
-    unified_id = uuid.uuid4().hex
-    github_id = github_user['id']
     sess = orm_session()
+    github_id = github_user['id']
     guser = sess.query(GithubUser) \
                 .filter_by(github_id=github_id).all()
     guser = guser[0] if len(guser) else None
     if not guser:
+        unified_id = uuid.uuid4().hex
         luser = UserInfo(unified_id=unified_id,
                          display_name=github_user['login'])
         sess.add(luser)
@@ -137,26 +164,18 @@ def _process_github_user_reg(github_user, token_d):
         guser = GithubUser(user_id=luser.user_id)
         guser.github_id = github_user['id']
         sess.add(guser)
-        logger.debug('new user from github has been registered.')
+        # logger.debug('new user from github has been registered.')
     guser.login_name = github_user['login']
     guser.html_url = github_user['html_url']
     guser.avatar_url = github_user['avatar_url']
     guser.profile_json = json_dumps(github_user)
     guser.token_json = json_dumps(token_d)
     sess.commit()
-    logger.debug("user's profile has been updated.")
-    # -------------------------------
+    # logger.debug("user's profile has been updated.")
 
-    user_d = {
-        'display_name': github_user['login'],
-        'github_user': github_user
-    }
-    current_user = session.user
-    if current_user:
-        current_user.user_id = guser.user_id
-        current_user.unified_id = unified_id
-        current_user.user_info = user_d
-        current_user.save_to_session()
+    # -------------------------------
+    _update_session_user(guser.user_id)
+    
     # --
     fwd_url = '/users/welcome/'
     return {
@@ -170,15 +189,20 @@ def _process_github_user_reg(github_user, token_d):
 @jview('users/github_repos.html')
 @login_required
 def github_get_user_repos():
-    token_d = session['github_access_token']
-    if not token_d:
-        return denied('You should signin with github first.')
+    args = request.args
+    if request.method == 'POST':
+        args = request.form
+    force_sync = _int(args.get('force_sync', '')) > 0
+
+    user_id = session.user.user_id
+    if 'github_token' not in session.user.user_info:
+        return redirect('/users/logout/', code=302)
+    token_d = session.user.user_info['github_token']
     a_token = token_d['access_token']
-    if not a_token:
-        return denied(err='Invalid access token.')
-    repos = github.get_repos(a_token)
-    current_user = session.user
-    users.services.sync_user_repos(current_user.user_id, repos)
+    repos = users.services.get_user_repos(user_id)
+    if not repos or force_sync:
+        github_repos = github.get_repos(a_token)
+        repos = users.services.sync_user_repos(user_id, github_repos)
     return {
         'repos': repos,
         'repos_json': json_dumps(repos),
@@ -190,5 +214,26 @@ def github_sync_all(fmt):
     fmt = fmt.lower()
     if fmt not in ('json',):
         return abort(404)
-    return json_dumps({})
+    user_id = session.user.user_id
+    token_d = session.user.user_info['github_token']
+    a_token = token_d['access_token']
+    github_repos = github.get_repos(a_token)
+    repos = users.services.sync_user_repos(user_id, github_repos)
+    return json_dumps({
+        'repo_count': len(repos)
+    })
 
+if 'TEST_MODE' in os.environ:
+    @bp.route('/create_test_session/')
+    def create_test_session():
+        args = request.args
+        user_id = _int(args['user_id'])
+        # --
+        if not _update_session_user(user_id):
+            return abort(403)
+        # --
+        resp = make_response('%d' % user_id)
+        resp.status_code = 200
+        resp.content_type = 'text/plain'
+        return resp
+        

@@ -8,9 +8,21 @@ _rootdir = os.path.abspath(os.path.join(_dir, '../'))
 if _rootdir not in sys.path:
     sys.path.append(_rootdir)
 
+os.environ['TEST_MODE'] = 'On'
+
 import logging
+
+logfmt = '[%(levelname)-5s] %(name)6s: %(message)s'
+logging.basicConfig(stream=sys.stdout, 
+                    level=logging.DEBUG,
+                    format=logfmt)
+logging.getLogger('tests').setLevel(logging.DEBUG)
+logging.getLogger('urllib3').setLevel(logging.INFO)
+logging.getLogger('sqlalchemy').setLevel(logging.WARNING)
+
 from tests.base import TestCaseBase
-from tests.test_user import UserTest
+from tests.test_user import UserTest, UserLogoutTest
+from tests.test_utils import UtilsTest
 
 
 class AppTest(TestCaseBase):
@@ -30,11 +42,10 @@ class AppTest(TestCaseBase):
 
 
 if __name__ == '__main__':
-    os.environ['TEST_MODE'] = 'On'
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    logging.getLogger('tests').setLevel(logging.DEBUG)
     t_all = ut.TestSuite()
     t_all.addTest(AppTest())
     t_all.addTest(UserTest())
+    t_all.addTest(UserLogoutTest())
+    t_all.addTest(UtilsTest())
     ut.main(verbosity=2, argv=sys.argv[:1])
 

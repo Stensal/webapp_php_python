@@ -1,0 +1,18 @@
+
+version: "2"
+
+services:
+  web:
+    command: "/bin/bash -c 'python3 /data/app/init_db.py -c dev && python3 /data/app/app.py -c dev -p 8080'"
+    restart: "no"
+    depends_on:
+      - db
+
+  db:
+    restart: "no"
+
+  nginx:
+    restart: "no"
+    depends_on:
+      - web
+

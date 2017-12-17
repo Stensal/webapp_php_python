@@ -17,13 +17,15 @@ logger = logging.getLogger('tests')
 
 class UserTest(TestCaseBase):
 
+    def setUp(self):
+        super(UserTest, self).setUp()
+
     def test_user_query(self):
         s = orm_session()
-        self.assertIsNotNone(s.query(UserInfo).all())
+        self.assertIsNotNone(s.query(UserInfo).all()[:10])
         s.close()
 
-    def test_github_start(self):
-        '''perform a redirect to github oauth2.'''
+    def test_github_oauth2(self):
         prefix = urllib.parse.quote('http://localhost')
         path1 = '/users/github/oauth_start'
         path2 = path1 + '?serv_prefix='
@@ -38,8 +40,7 @@ class UserTest(TestCaseBase):
         self.assertTrue(resp.status_code in (301, 302),
                         msg='status_code: %s' % resp.status_code)
 
-    def test_create_github_user(self):
-        '''register a github user and find it in db.'''
+    def test_github_user_register(self):
         token_d = github_token
         github_resp = json.loads(github_get_user_resp)
         github_user = github_resp['github_user']
@@ -55,11 +56,46 @@ class UserTest(TestCaseBase):
                 .filter(UserInfo.user_id==GithubUser.user_id) \
                 .filter(GithubUser.user_id==user_id) \
                 .one()
+        s.close()
         self.assertIsNotNone(user)
         self.assertEqual(user.github_id, github_user['id'])
 
-    def test_repos(self):
-        '''diff repos between local's and github's.'''
+    def test_list_repos(self):
+        user, resp = self._create_session()
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsNotNone(user)
+
+        resp = self.client.get('/users/github/repos/')
+        self.assertEqual(resp.status_code, 200)
+
+        resp = self.client.get('/users/github/repos/?force_sync=1')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_sync_repos(self):
+        user, resp = self._create_session()
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsNotNone(user)
+
+        repos = json.loads(github_get_repos_resp)
+        rs = users.services.sync_user_repos(user.user_id, repos)
+        self.assertIsNotNone(rs)
+        self.assertTrue(rs)
+
+    def test_sync_all(self):
+        user, resp = self._create_session()
+        self.assertEqual(resp.status_code, 200)
+
+        resp = self.client.get('/users/github/sync_all.json')
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsNotNone(resp.data)
+        self.assertTrue(isinstance(resp.data, (str, bytes)))
+        self.assertGreater(len(resp.data), 0)
+
+        rs = json.loads(resp.data)
+        self.assertIsNotNone(rs)
+        self.assertTrue(isinstance(rs, dict))
+
+    def _create_session(self):
         github_resp = json.loads(github_get_user_resp)
         github_user = github_resp['github_user']
         s = orm_session()
@@ -67,19 +103,34 @@ class UserTest(TestCaseBase):
                .filter(UserInfo.user_id == GithubUser.user_id) \
                .filter(GithubUser.github_id == github_user['id']) \
                .one()
-        repos = json.loads(github_get_repos_resp)
-        rs = users.services.sync_user_repos(user.user_id, repos)
-        self.assertIsNotNone(rs)
-        self.assertTrue(rs)
+        s.close()
 
-    def test_sync_all(self):
-        resp = self.client.get('/users/github/sync_all.json')
+        urls = ('/users/create_test_session/', \
+                '/users/create_test_session/?user_id=', \
+                '/users/create_test_session/?user_id=%s' % 0,)
+        for url in urls:
+            resp = self.client.get(url)
+            self.assertNotEqual(resp.status_code, 200)
+
+        url = '/users/create_test_session/?user_id=%s' % user.user_id
+        resp = self.client.get(url)
+        return user, resp
+
+
+class UserLogoutTest(TestCaseBase):
+
+    def setUp(self):
+        super(UserTest, self).setUp()
+
+    def _logout(self):
+        url = '/users/logout/'
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 302)
+
+        resp = self.client.get(url, follow_redirects=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertIsNotNone(resp.data)
-        self.assertTrue(isinstance(resp.data, (str, bytes)))
-        self.assertGreater(len(resp.data), 0)
-        logger.debug(resp.data)
-        rs = json.loads(resp.data)
-        self.assertIsNotNone(rs)
-        self.assertEqual(isinstance(rs, dict))
+
+    def tearDown(self):
+        self._logout()
+        super(UserTest, self).tearDown()
 

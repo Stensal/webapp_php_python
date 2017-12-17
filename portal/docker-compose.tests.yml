@@ -5,7 +5,7 @@ services:
   tests_web:
     build: ./app
     container_name: portal_web_tests
-    command: python3 /data/app/tests/test_main.py -c tests
+    command: "/bin/bash -c 'python3 /data/app/init_db.py -c tests && python3 /data/app/tests/test_main.py -c tests'"
     volumes:
       - ./app:/data/app
     restart: "no"
@@ -17,6 +17,7 @@ services:
   tests_db:
     image: "mysql:5"
     container_name: "db_mysql_tests"
+    command: mysqld
     volumes:
       - ./db/test-data:/data
       - ./db/etc/mysql:/etc/mysql

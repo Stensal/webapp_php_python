@@ -19,7 +19,7 @@ class Repo(Base):
     repo_id = Column(BigInteger)
     full_name = Column(String(120))
     repo_type = Column(String(30))
-    repo_desc = Column(String(120))
+    repo_desc = Column(Text)
     is_fork = Column(Integer)
     html_url = Column(String(120))
     ssh_url = Column(String(120))
@@ -29,6 +29,7 @@ class Repo(Base):
     default_branch = Column(String(60))
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
+    repo_json = Column(Text)
 
 
 # class RepoCommit(Base):
@@ -38,3 +39,9 @@ class Repo(Base):
 #     local_id = Column(BigInteger,
 #                       primary_key=True, 
 #                       autoincrement=True)
+
+# Base.metadata.create_all(bind=engine, checkfirst=True)
+
+if __name__ == '__main__':
+    pass
+

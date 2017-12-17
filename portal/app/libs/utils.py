@@ -2,13 +2,14 @@
 
 import os
 import re
-import datetime
+import datetime, time
 import random
 import math
 import json
 from decimal import Decimal
 import functools
 import six
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
 class CommonJSONEncoder(json.JSONEncoder):
@@ -16,6 +17,9 @@ class CommonJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if six.PY3:
             if isinstance(obj, bytes):
+                return obj.decode('utf-8')
+        else:
+            if isinstance(obj, str):
                 return obj.decode('utf-8')
         if isinstance(obj, datetime.datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
@@ -27,6 +31,12 @@ class CommonJSONEncoder(json.JSONEncoder):
             return obj.json_object();
         if hasattr(obj, '__json__'):
             return obj.__json__()
+        if isinstance(obj.__class__, DeclarativeMeta):
+            keys = [k for k in dir(obj) \
+                    if not k.startswith('_') \
+                    and k != 'metadata']
+            d = dict([(k, json_dumps(getattr(obj, k))) for k in keys])
+            return d
         return json.JSONEncoder.default(self, obj);
 
 
@@ -94,3 +104,11 @@ def _date(text):
         y, mon = int(_m['y']), int(_m['mon'])
         return datetime.datetime(y, mon, 1, 0, 0, 0)
 
+def _date_iso8601(t):
+    if not t or not isinstance(t, (str, bytes)):
+        raise ValueError('a str argument required.')
+    if isinstance(t, bytes):
+        t = t.decode('utf-8')
+    fmt = '%Y-%m-%dT%H:%M:%SZ'
+    d = datetime.datetime.strptime(t, fmt)
+    return d
