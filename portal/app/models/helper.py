@@ -25,5 +25,17 @@ Session = sessionmaker(bind=engine)
 def orm_session(**kargs):
     return Session(**kargs)
 
+
 Base = declarative_base()
+
+
+class JSONSerializable(object):
+
+    def __json__(self):
+        keys = [k for k in dir(self) \
+                if not k.startswith('_') \
+        and k != 'metadata']
+        d = dict([(k, getattr(self, k)) \
+                  for k in keys])
+        return d
 

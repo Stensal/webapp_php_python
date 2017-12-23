@@ -14,9 +14,10 @@ from sqlalchemy import Sequence, Column, String, Integer, DateTime
 from sqlalchemy import ForeignKey, Text, BigInteger
 from sqlalchemy import text
 from models.helper import engine, orm_session, Base
+from models.helper import JSONSerializable
 
 
-class UserInfo(Base):
+class UserInfo(Base, JSONSerializable):
 
     __tablename__ = 't_user_info'
     
@@ -36,7 +37,21 @@ class UserInfo(Base):
                       default=datetime.datetime.now)
 
 
-class GithubUser(Base):
+class UserPriv(Base, JSONSerializable):
+
+    __tablename__ = 't_user_priv'
+
+    pair_id = Column(BigInteger, 
+                     nullable=False,
+                     autoincrement=True,
+                     primary_key=True)
+    user_id = Column(BigInteger, 
+                     nullable=False)
+    priv_code = Column(String(60), 
+                       nullable=False)
+
+
+class GithubUser(Base, JSONSerializable):
 
     __tablename__ = 't_github_user'
 
@@ -59,7 +74,7 @@ class GithubUser(Base):
                          onupdate=datetime.datetime.now)
 
 
-class UserLog(Base):
+class UserLog(Base, JSONSerializable):
 
     __tablename__ = 't_user_log'
 

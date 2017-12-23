@@ -4,9 +4,10 @@ from sqlalchemy import Sequence, Column, String, Integer, DateTime
 from sqlalchemy import ForeignKey, Text, BigInteger
 from sqlalchemy import text
 from models.helper import engine, orm_session, Base
+from models.helper import JSONSerializable
 
 
-class Repo(Base):
+class Repo(Base, JSONSerializable):
 
     __tablename__ = 't_repo'
 

@@ -3,7 +3,7 @@
 import logging
 import urllib.parse
 import json
-from tests.base import TestCaseBase
+from tests.base import TestCaseBaseWithSession
 from models.user import UserInfo, GithubUser
 from models.helper import orm_session
 from tests.mock_data import github_token, github_get_user_resp
@@ -15,7 +15,7 @@ import users.services
 logger = logging.getLogger('tests')
 
 
-class UserTest(TestCaseBase):
+class UserTest(TestCaseBaseWithSession):
 
     def setUp(self):
         super(UserTest, self).setUp()
@@ -23,6 +23,17 @@ class UserTest(TestCaseBase):
     def test_user_query(self):
         s = orm_session()
         self.assertIsNotNone(s.query(UserInfo).all()[:10])
+        s.close()
+
+    def test_user_avatar(self):
+        s = orm_session()
+        rs = s.query(GithubUser).first()
+        if rs:
+            user_id = rs.user_id
+            # fname = users.services.get_user_avatar_file(user_id)
+            url = '/users/user/%s/avatar.png' % user_id
+            resp = self.client.get(url)
+            self.assertEqual(resp.status_code, 200)
         s.close()
 
     def test_github_oauth2(self):
@@ -61,10 +72,6 @@ class UserTest(TestCaseBase):
         self.assertEqual(user.github_id, github_user['id'])
 
     def test_list_repos(self):
-        user, resp = self._create_session()
-        self.assertEqual(resp.status_code, 200)
-        self.assertIsNotNone(user)
-
         resp = self.client.get('/users/github/repos/')
         self.assertEqual(resp.status_code, 200)
 
@@ -72,19 +79,13 @@ class UserTest(TestCaseBase):
         self.assertEqual(resp.status_code, 200)
 
     def test_sync_repos(self):
-        user, resp = self._create_session()
-        self.assertEqual(resp.status_code, 200)
-        self.assertIsNotNone(user)
-
+        user = self.user
         repos = json.loads(github_get_repos_resp)
         rs = users.services.sync_user_repos(user.user_id, repos)
         self.assertIsNotNone(rs)
         self.assertTrue(rs)
 
     def test_sync_all(self):
-        user, resp = self._create_session()
-        self.assertEqual(resp.status_code, 200)
-
         resp = self.client.get('/users/github/sync_all.json')
         self.assertEqual(resp.status_code, 200)
         self.assertIsNotNone(resp.data)
@@ -95,29 +96,9 @@ class UserTest(TestCaseBase):
         self.assertIsNotNone(rs)
         self.assertTrue(isinstance(rs, dict))
 
-    def _create_session(self):
-        github_resp = json.loads(github_get_user_resp)
-        github_user = github_resp['github_user']
-        s = orm_session()
-        user = s.query(UserInfo.user_id) \
-               .filter(UserInfo.user_id == GithubUser.user_id) \
-               .filter(GithubUser.github_id == github_user['id']) \
-               .one()
-        s.close()
-
-        urls = ('/users/create_test_session/', \
-                '/users/create_test_session/?user_id=', \
-                '/users/create_test_session/?user_id=%s' % 0,)
-        for url in urls:
-            resp = self.client.get(url)
-            self.assertNotEqual(resp.status_code, 200)
-
-        url = '/users/create_test_session/?user_id=%s' % user.user_id
-        resp = self.client.get(url)
-        return user, resp
 
 
-class UserLogoutTest(TestCaseBase):
+class UserLogoutTest(TestCaseBaseWithSession):
 
     def setUp(self):
         super(UserTest, self).setUp()

@@ -11,14 +11,34 @@ import logging
 modpath = os.path.relpath(os.path.abspath(__file__), _appdir)
 logger = logging.getLogger(modpath)
 
+import hashlib
 import datetime, time
 from libs.app_exp import Abort
 from libs.utils import json_dumps, _date_iso8601
 from sqlalchemy.sql.expression import tuple_
 from models.helper import orm_session
-from models.user import UserInfo, UserLog, GithubUser
+from models.user import UserInfo, UserLog, GithubUser, UserPriv
 from models.repo import Repo
+import requests
 
+
+def add_github_user_priv(github_login_name, priv_code):
+    s = orm_session()
+    rs = s.query(UserInfo) \
+         .filter(UserInfo.user_id == GithubUser.user_id) \
+         .filter(GithubUser.login_name == github_login_name) \
+         .first()
+    if not rs:
+        return
+    user_id = rs.user_id
+    rs = s.query(UserPriv)\
+          .filter(UserPriv.user_id == user_id) \
+          .filter(UserPriv.priv_code == priv_code) \
+          .first()
+    if not rs:
+        p = UserPriv(user_id=user_id, priv_code=priv_code)
+        s.add(p)
+        s.commit()
 
 def update_repo(r, repo_dict):
     r.repo_name = repo_dict['name']
@@ -85,3 +105,28 @@ def get_user_repos(user_id, orm_s=None):
                 .all()
     return db_repos
 
+def get_user_avatar_file(user_id):
+    s = orm_session()
+    user = s.query(GithubUser) \
+           .filter(GithubUser.user_id == user_id) \
+           .first()
+    s.close()
+    if not user:
+        return
+    avatar_url = user.avatar_url
+    _hash = hashlib.md5(avatar_url.encode('utf-8')).hexdigest()
+    subdir = _hash[:2]
+    cache_dir = os.path.join(_appdir, 'avatar.tmp', subdir)
+    if not os.path.isdir(cache_dir):
+        os.makedirs(cache_dir)
+    filename = '%s.png' % _hash
+    filepath = os.path.join(cache_dir, filename)
+    if os.path.isfile(filepath):
+        return filepath
+    with requests.get(avatar_url) as resp:
+        if resp.status_code == 200:
+            with open(filepath, 'wb+') as f:
+                f.write(resp.content)
+                f.close()
+    return filepath
+    

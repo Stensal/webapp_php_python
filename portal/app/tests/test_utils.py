@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
+
+_dir = os.path.dirname(os.path.abspath(__file__))
+_rootdir = os.path.abspath(os.path.join(_dir, '../'))
+if _rootdir not in sys.path:
+    sys.path.append(_rootdir)
+
 import datetime, time
 import logging
 import json
+from libs.utils import namedtuple
 import unittest as ut
 from libs.utils import _date_iso8601, _date, json_dumps
 from models.repo import Repo
@@ -31,6 +38,8 @@ class UtilsTest(ut.TestCase):
         self.assertEqual(int(d.timestamp()), 1512424997)
 
     def test_json_dumps(self):
+        M = namedtuple('M', ('x', 'y', 'name'))
+        m0 = M(1, 2, 'central')
         objs = (123, \
                 True, \
                 None, \
@@ -41,6 +50,14 @@ class UtilsTest(ut.TestCase):
                 Repo(repo_id=123, repo_name='cpp'), \
                 datetime.datetime.now(), \
                 time.time(), \
-                '汉字', )
+                '汉字', \
+                m0, )
         for obj in objs:
             self.assertTrue(isinstance(json_dumps(obj), str))
+        m1 = json.loads(json_dumps(m0))
+        self.assertTrue(isinstance(m1, dict))
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    ut.main(verbosity=2, argv=sys.argv[:1])

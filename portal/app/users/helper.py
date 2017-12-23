@@ -14,6 +14,7 @@ def denied(err=None):
     vdata = {'err': err or 'Access denied.'}
     resp = make_response(render_template(tpl, **vdata))
     resp.content_type = 'text/html'
+    resp.status_code = 403
     return resp
 
 def login_required(*args, **kargs):

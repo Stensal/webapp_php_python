@@ -23,4 +23,38 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6
 {
     margin: 0px;
     padding: 0.3em 0px 0px 0px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
+
+.container > h1,
+.container > h2, 
+.container > h3,
+.container > h4
+{
+    padding: 0.3em 0px;
+}
+
+main.content
+{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding-bottom: 2.5em;
+}
+
+.col-layout
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.col-layout > .col-7
+{
+    flex: 7;
+}
+
+.col-layout > .col-3
+{
+    flex: 3;
+}
+

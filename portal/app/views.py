@@ -19,25 +19,31 @@ bp = Blueprint('root_bp', __name__, template_folder='templates')
 @bp.route('/', methods=['POST', 'GET'])
 @jview('index.html')
 def index():
-    return {'title': ''}
+    return {
+        'title': ''
+    }
 
 @bp.route('/privacy/', methods=['POST', 'GET'])
 @jview('privacy.html')
 def privacy():
-    return {'title': 'Privacy', 'active': 'Privacy'}
+    return {
+        'title': 'Privacy', 
+        'ui_components_nav_active': 'privacy'
+    }
 
 @bp.route('/demo/', methods=['POST', 'GET'])
 @jview('demo.html')
 def demo():
-    return {'title': 'Demo', 'active': 'Demo'}
+    return {
+        'title': 'Demo', 
+        'ui_components_nav_active': 'demo'
+    }
 
 @bp.route('/products/', methods=['POST', 'GET'])
 @jview('products.html')
 def products():
-    return {'title': 'Products', 'active': 'Products'}
-
-@bp.route('/issues/', methods=['POST', 'GET'])
-@jview('issues.html')
-def issues():
-    return {'title': 'Issues', 'active': 'Issues'}
+    return {
+        'title': 'Products', 
+        'ui_components_nav_active': 'products'
+    }
 

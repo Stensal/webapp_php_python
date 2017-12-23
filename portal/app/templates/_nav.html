@@ -12,14 +12,10 @@
   <div class="pure-u-1 pure-u-md-2-3">
     <div class="pure-menu menu-can-transform pure-menu-horizontal">
       <ul class="pure-menu-list navbar-nav navbar-right">
-	<li class="pure-menu-item"><a href="/products/" class="pure-menu-link">products</a></li>
-	<li class="pure-menu-item"><a href="/demo/" class="pure-menu-link">demo</a></li>
 
-	<li class="pure-menu-item">
-	  <a href="/issues/" class="pure-menu-link">issues</a>
-	</li>
-
-	<li class="pure-menu-item"><a href="/forum/" class="pure-menu-link">forum</a></li>
+	{% for btn in ui_components.nav %}
+	<li class="pure-menu-item{% if btn.label == ui_components_nav_active %} pure-menu-active{% endif %}"><a href="{{ btn.href }}" class="pure-menu-link">{{ btn.label }}</a></li>
+	{% endfor %}
 
 	<li class="pure-menu-item">
 	  {% if current_user and current_user.authenticated %}

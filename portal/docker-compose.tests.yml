@@ -5,10 +5,10 @@ services:
   tests_web:
     build: ./app
     container_name: portal_web_tests
-    command: "/bin/bash -c 'python3 /data/app/init_db.py -c tests && python3 /data/app/tests/test_main.py -c tests'"
+    command: "/bin/bash -c 'python3 /data/app/init_db.py -c tests && sleep 3650d'"
     volumes:
       - ./app:/data/app
-    restart: "no"
+    restart: "unless-stopped"
     stdin_open: true
     tty: true
     depends_on:
@@ -20,8 +20,9 @@ services:
     command: mysqld
     volumes:
       - ./db/test-data:/data
+      - ./db/mysql_cli.sh:/data/mysql_cli.sh
       - ./db/etc/mysql:/etc/mysql
-    restart: "no"
+    restart: "unless-stopped"
     environment:
       - MYSQL_DATABASE=stensal_web
       - MYSQL_ROOT_PASSWORD=dec2017t@

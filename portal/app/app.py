@@ -31,6 +31,9 @@ blueprints = (
     # users area, signup/profile edit/logout, etc.
     ('users.views.bp', '/users'),
 
+    # issues
+    ('issues.views.bp', '/issues'),
+
     # 带版本的静态文件
     ('static_views.static_bp', '/v'),
 

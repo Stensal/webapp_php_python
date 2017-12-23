@@ -2,19 +2,24 @@
 
 ### (1) init db
 
-    docker-compose -f docker-compose.yml -f dockre-compose.initdb.yml up
+    docker-compose -f docker-compose.yml -f docker-compose.initdb.yml up
 
 ### (2) run dev server
 
-    docker-compose up
+    docker-compose up 
 
 after containers came up, open in browser: [http://localhost](http://localhost).
 
 ## testing
 
-### run unittests
+### run tests
 
-    docker-compose -f docker-compose.tests.yml up
+(1) start containers
 
+    docker-compose -f docker-compose.tests.yml up -d
+
+(2) run tests:
+
+    docker exec -ti portal_web_tests python /data/app/tests/test_main.py -c tests
 
 

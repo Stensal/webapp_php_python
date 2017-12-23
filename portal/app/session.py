@@ -355,11 +355,12 @@ class SessionInterface(flask.sessions.SessionInterface):
                                 path=self.cookie_path, 
                                 max_age=self._session_timeout)
 
-class SessionUser(object):
+class SessionUser(JSONObject):
 
     _keys = ('user_id',
              'unified_id', 
-             'user_info',)
+             'user_info',
+             'privs')
 
 
     def __str__(self):
@@ -377,6 +378,18 @@ class SessionUser(object):
 
     def get_dict(self):
         return dict([(k, self[k]) for k in self.__class__._keys])
+
+    def json_object(self):
+        user_d = None
+        if self.user_info:
+            user_d = dict([(k, self.user_info[k]) \
+                           for k in self.user_info \
+                           if k != 'github_token'])
+        return {
+            'user_id': self.user_id,
+            'privs': self.privs,
+            'user_info': user_d
+        }
 
     def get_value(self, key):
         if key in self.__class__._keys:
@@ -424,6 +437,11 @@ class SessionUser(object):
         if self.user_id and self.user_info:
             return True
         return False
+
+    def has_priv(self, priv):
+        if not self.authenticated:
+            return False
+        return priv.fullfilled_by(self.privs or [])
 
     def save_to_session(self):
         if hasattr(self.session, 'save'):

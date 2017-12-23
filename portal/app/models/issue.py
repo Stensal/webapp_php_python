@@ -14,6 +14,7 @@ from sqlalchemy import Sequence, Column, String, Integer, DateTime
 from sqlalchemy import ForeignKey, Text, BigInteger
 from sqlalchemy import text
 from models.helper import engine, orm_session, Base
+from models.helper import JSONSerializable
 
 
 ISSUE_ST_CREATED = 0
@@ -22,7 +23,12 @@ ISSUE_ST_DENIED = 1 << 2
 ISSUE_ST_PUBLISHED = 1 << 3
 
 
-class IssueLabel(Base):
+ISSUE_NODE_TYPE_CONTENT = 0
+ISSUE_NODE_TYPE_LABELS = 1
+ISSUE_NODE_TYPE_STATUS = 2
+
+
+class IssueLabel(Base, JSONSerializable):
 
     __tablename__ = 't_is_label'
 
@@ -38,7 +44,7 @@ class IssueLabel(Base):
     enabled = Column(Integer, default=1)
 
 
-class IssueNode(Base):
+class IssueNode(Base, JSONSerializable):
 
     __tablename__ = 't_is_node'
 
@@ -51,6 +57,7 @@ class IssueNode(Base):
                             nullable=False)
     node_type = Column(Integer, 
                        nullable=False)
+    title = Column(String(120))
     content = Column(Text)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
@@ -62,7 +69,7 @@ class IssueNode(Base):
                     default=ISSUE_ST_CREATED)
 
 
-class IssueNodeLog(Base):
+class IssueNodeLog(Base, JSONSerializable):
 
     __tablename__ = 't_is_node_log'
 
@@ -77,10 +84,13 @@ class IssueNodeLog(Base):
                      nullable=False)
 
 
-class IssueNodeLabel(Base):
+class IssueNodeLabel(Base, JSONSerializable):
 
     __tablename__ = 't_is_node_label'
 
+    pair_id = Column(BigInteger, 
+                     primary_key=True,
+                     autoincrement=True)
     node_id = Column(BigInteger,
                      nullable=False)
     label_id = Column(BigInteger,

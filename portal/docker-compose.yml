@@ -24,6 +24,7 @@ services:
     container_name: "db_mysql"
     volumes:
       - ./db/data:/data
+      - ./db/mysql_cli.sh:/data/mysql_cli.sh
       - ./db/etc/mysql:/etc/mysql
     ports:
       - "3306:3306"

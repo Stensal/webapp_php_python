@@ -1,9 +1,11 @@
 .idea/
 mysql/data/
 mysql/test-data/
+test-data
 __pycache__
 *.pyc
 mysql_data
 *.rdb
 sessions
 *.tmp
+node_modules

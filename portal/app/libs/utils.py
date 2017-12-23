@@ -2,6 +2,7 @@
 
 import os
 import re
+import logging
 import datetime, time
 import random
 import math
@@ -9,7 +10,68 @@ import json
 from decimal import Decimal
 import functools
 import six
-from sqlalchemy.ext.declarative import DeclarativeMeta
+# from sqlalchemy.ext.declarative import DeclarativeMeta
+
+logger = logging.getLogger(__name__)
+
+
+class NTuple(object):
+
+    def __init__(self, meta, *vals):
+        self.meta = meta
+        self.vals = vals if isinstance(vals, list) else list(vals)
+
+    def __dir__(self):
+        return self.meta.keys
+
+    def __contains__(self, key):
+        return key in self.meta.keys
+
+    def __getitem__(self, key):
+        return self.vals[self.meta.idx[key]]
+
+    def __setitem__(self, key, value):
+        if key not in self.meta.idx:
+            self.meta.add_key(key)
+        i = self.meta.idx[key]
+        if i >= len(self.vals):
+            self.vals.append(value)
+        else:
+            self.vals[i] = value
+
+    def __getattr__(self, key):
+        if key in self.meta.keys:
+            return self.vals[self.meta.idx[key]]
+        raise AttributeError(key)
+
+    # def __setattr__(self, key, value):
+    #     if key in self.meta.keys:
+    #         self.vals[self.meta.idx[key]] = value
+    #     else:
+    #         super(NTuple, self).__setattr__(key, value)
+
+    def _asdict(self):
+        return dict([(k, self.vals[self.meta.idx[k]]) \
+                     for k in self.meta.idx])
+
+
+class NTupleMeta(object):
+
+    def __init__(self, _, keys):
+        self.keys = keys
+        self.idx = dict([(k, i) for i, k in enumerate(keys)])
+
+    def add_key(self, key):
+        if key not in self.idx:
+            self.keys.append(key)
+            self.idx[key] = len(self.keys) - 1
+
+    def __call__(self, *vals):
+        return NTuple(self, *vals)
+
+
+def namedtuple(name, keys):
+    return NTupleMeta(name, keys)
 
 
 class CommonJSONEncoder(json.JSONEncoder):
@@ -27,17 +89,14 @@ class CommonJSONEncoder(json.JSONEncoder):
             return obj.strftime('%Y-%m-%d')
         if isinstance(obj, Decimal):
             return float(obj)
+        if isinstance(obj, NTuple):
+            return obj._asdict()
         if isinstance(obj, JSONObject):
             return obj.json_object();
         if hasattr(obj, '__json__'):
             return obj.__json__()
-        if isinstance(obj.__class__, DeclarativeMeta):
-            keys = [k for k in dir(obj) \
-                    if not k.startswith('_') \
-                    and k != 'metadata']
-            d = dict([(k, json_dumps(getattr(obj, k))) for k in keys])
-            return d
         return json.JSONEncoder.default(self, obj);
+        # return super(CommonJSONEncoder, self).default(obj)
 
 
 class JSONObject(object):

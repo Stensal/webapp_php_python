@@ -11,7 +11,7 @@ import uuid
 import json
 from flask import Blueprint, request, redirect, abort
 from flask import make_response, render_template
-from flask import send_file
+from flask import send_file, url_for
 from flask import session
 from ui import jview, json_view
 import config
@@ -22,7 +22,7 @@ from libs.utils import json_dumps, _int
 from users.helper import login_required, denied, user_cache
 # from session import current_user
 from models.helper import orm_session
-from models.user import UserInfo, UserLog, GithubUser
+from models.user import UserInfo, UserLog, GithubUser, UserPriv
 import users.services
 from flask import session
 
@@ -37,8 +37,8 @@ bp = Blueprint('users_bp', __name__, template_folder='templates')
 def user_index():
     current_user = session.user
     if current_user.authenticated:
-        return redirect('/users/welcome/')
-    return redirect('/users/signup/')
+        return redirect(url_for('.github_user_welcome_page'))
+    return redirect(url_for('.user_signup_choices'))
 
 @bp.route('/welcome/', methods=['GET'])
 @jview('users/welcome.html')
@@ -51,11 +51,21 @@ def github_user_welcome_page():
         'user_info_json': json_dumps(user_info),
     }
 
+@bp.route('/user/<int:user_id>/avatar.png',
+          methods=['GET', 'POST'])
+def user_avatar_png(user_id):
+    if not user_id or user_id <= 0:
+        return abort(404)
+    filepath = users.services.get_user_avatar_file(user_id)
+    if not filepath:
+        return abort(404)
+    return send_file(filepath)
+
 @bp.route('/logout/', methods=['POST', 'GET'])
 def user_logout():
     session.user.clear()
     session.save()
-    return redirect('/', code=302)
+    return redirect(url_for('.user_index'), code=302)
 
 @bp.route('/signup/', methods=['POST', 'GET'])
 @jview('users/signup.html')
@@ -129,6 +139,10 @@ def _update_session_user(user_id):
             .one_or_none()
     if not user:
         return
+    privs = s.query(UserPriv)\
+             .filter(UserPriv.user_id == user_id).all()
+    privs = [p.priv_code for p in privs]
+    
     github_user = json.loads(user.profile_json)
     token_d = json.loads(user.token_json)
     user_d = {
@@ -139,6 +153,7 @@ def _update_session_user(user_id):
     session.user.user_id = user.user_id
     session.user.unified_id = user.unified_id
     session.user.user_info = user_d
+    session.user.privs = privs
     session.user.save_to_session()
     return user
 
@@ -196,7 +211,7 @@ def github_get_user_repos():
 
     user_id = session.user.user_id
     if 'github_token' not in session.user.user_info:
-        return redirect('/users/logout/', code=302)
+        return redirect(url_for('.user_logout'), code=302)
     token_d = session.user.user_info['github_token']
     a_token = token_d['access_token']
     repos = users.services.get_user_repos(user_id)
