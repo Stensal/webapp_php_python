@@ -41,9 +41,11 @@ class _Conf(object):
     def _load_conf(self, name):
         name = name or 'dev'
         _name, _ext = os.path.splitext(name)
-        if _ext and _ext.lower() != '.yaml':
+        if _ext and _ext.lower() not in ('.yaml', '.yml'):
             _name = name
-        filenames = (_name + '.yaml',
+        filenames = (_name + '.yml',
+                     _name + '.yaml',
+                     _name + '.' + self.deploy_flag + '.yml',
                      _name + '.' + self.deploy_flag + '.yaml')
         conf = {}
         for fname in filenames:

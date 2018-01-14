@@ -1,28 +1,41 @@
+{# -*- coding: utf-8 -*- #}
 <!DOCTYPE html>
 <html lang="en">
 
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="Stensal C and C++ - a memory safer implementation of C and C++"/>
+    <meta name="keywords" content="Stensal Inc, Stensal, segmentation fault, core dump, buffer overrun, buffer overflow,
+				   user after free, double free, security, safety, memory safety, type safety, C, C++, CPP, malloc, free, mmap, crash, SIGSEGV, crash"/>
+    <link rel="shortcut icon" href="/static/ico/favicon.png">
 
     <title>{{ title or "STENSAL - HOME" }}</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="/static/css/bootstrap.css" rel="stylesheet">
-    <link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <!-- purecss core CSS -->
+
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/purecss_1_0_0/base.css"/>
+    <link rel="stylesheet" href="/static/purecss_1_0_0/grids.css"/>
+    <link rel="stylesheet" href="/static/purecss_1_0_0/grids-responsive.css"/>
+    <link rel="stylesheet" href="/static/purecss_1_0_0/menus.css"/>
+    <link rel="stylesheet" href="/static/purecss_1_0_0/buttons.css"/>
+    <link rel="stylesheet" href="/static/purecss_1_0_0/forms.css"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/static/css/stensal.css"/>
 
 
     <!-- Custom styles for this template -->
-    <link href="/v/20171202/static/css/main.css" rel="stylesheet">
-    <link href="/v/20171202/static/css/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/reset.css"/>
+    <link rel="stylesheet" href="/static/css/responsive.css"/>
+    <link rel="stylesheet" href="/static/css/portal.css"/>
 
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="/static/js/hover.zoom.js"></script>
-    <script src="/static/js/hover.zoom.conf.js"></script>
+    <script src="/static/js/moment.min.js"></script>
+    <script src="/static/portal/shared/react.js"></script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -37,45 +50,21 @@
 
   <body>
 
-    <!-- Static navbar -->
-    <header class="navbar navbar-fixed navbar-border">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">
-          <img src="/static/img/logo.png" alt="stensal logo">
-        </a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-	  {% for href, name in [("/products/", "Products"), ("/demo/", "Demo"), ("/issues/", "Issues")] %}
-          <li><a href="{{ href }}"{% if active == name %} class="active"{% endif %}>{{ name }}</a></li>
-	  {% endfor %}
-          <li>
-	    {% if current_user and current_user.authenticated %}
-	    <a href="/users/" class="signup">
-	      <img class="avatar" src="{{ current_user.user_info.github_user.avatar_url }}"/>
-	      {{ current_user.user_info.display_name }}
-	    </a>
-	    {% else %}
-	    <a href="/users/" class="primary signup">Sign Up</a>
-	    {% endif %}
-          </li>
-        </ul>
-      </div>
-      <!--/.nav-collapse -->
-    </header>
 
-    {% block body %}
+    {% include "_nav.html" %}
+
+    {% block content %}
     {% endblock %}
+    
 
-    <!-- Bootstrap core JavaScript
-     ================================================== -->
+    {% include "_footer.html" %}
+
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+
+    <!-- <script src="/static/js/ui.js"></script> -->
+    <script src="/static/js/global.js"></script>
 
   </body>
 

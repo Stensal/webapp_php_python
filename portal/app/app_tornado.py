@@ -13,12 +13,10 @@ from tornado.ioloop import IOLoop
 
 import config
 from app import app
-from session import SessionMiddleware
 from libs.middlewares import AccessControlMiddleware
 
 
 if __name__ == '__main__':
-    app.wsgi_app = SessionMiddleware(app.wsgi_app)
     app.wsgi_app = AccessControlMiddleware(app.wsgi_app)
 
     if not config.cli.do_import_test:

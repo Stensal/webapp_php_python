@@ -1,20 +1,13 @@
 
-version: "3"
+version: "2"
 
 services:
   web:
+    command: python3 /data/app/app_tornado.py -c deploy -p 8080
     restart: always
-    depends_on:
-      - redis
     healthcheck:
       test: "curl -f http://localhost:8080"
       interval: 20s
       timeout: 10s
       retries: 3
-
-  redis:
-    restart: always
-
-  db:
-    restart: always
 

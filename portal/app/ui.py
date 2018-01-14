@@ -6,13 +6,14 @@ import urllib
 import functools
 import flask
 from flask import render_template, request, make_response
+from flask import session
 from libs.utils import json_dumps
 import json
 import zlib
 import libs.py6 as py6
 import config
 import six
-from session import current_user
+import ui_components
 
 
 def jview(arg):
@@ -23,12 +24,12 @@ def jview(arg):
             def wrapper(*args, **kargs):
                 result = view_func(*args, **kargs)
                 if isinstance(result, dict):
-                    if 'user' in request.environ:
-                        result['current_user'] = request.environ['user']
                     if 'debug' not in result:
                         result['debug'] = config._debug_
+                    current_user = session.user
                     result['_r'] = py6.hexlify(os.urandom(8))
                     result['current_user'] = current_user
+                    result['ui_components'] = ui_components
                     return render_template(tpl_path, **result)
                 return result
             return wrapper

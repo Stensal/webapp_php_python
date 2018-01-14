@@ -8,19 +8,21 @@ if _dir not in sys.path:
     sys.path.append(_dir)
 
 logging_conf = {
-    'level': logging.DEBUG
+    'level': logging.DEBUG,
+    'format': '%(name)6s - [%(levelname)s]: %(message)s'
 }
 logging.basicConfig(**logging_conf)
 
 from flask import Flask, redirect, request
 from flask import render_template, make_response
 from ui import jview, json_view
-from session import SessionMiddleware
+from session import SessionInterface
 from libs.middlewares import AccessControlMiddleware
 import config
 
 
 app = Flask(__name__, template_folder='templates')
+app.session_interface = SessionInterface()
 app.debug = True
 
 
@@ -28,6 +30,9 @@ blueprints = (
 
     # users area, signup/profile edit/logout, etc.
     ('users.views.bp', '/users'),
+
+    # issues
+    ('issues.views.bp', '/issues'),
 
     # 带版本的静态文件
     ('static_views.static_bp', '/v'),
@@ -51,7 +56,7 @@ for mod_path, mount_point in blueprints:
 
 if __name__ == '__main__':
     host = ('0.0.0.0', config.port)
-    app.wsgi_app = SessionMiddleware(app.wsgi_app)
+    # app.wsgi_app = SessionMiddleware(app.wsgi_app)
     app.wsgi_app = AccessControlMiddleware(app.wsgi_app)
     if not config.cli.do_import_test:
         logging.debug('listening at %s:%d...' % host)

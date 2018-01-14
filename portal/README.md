@@ -1,7 +1,25 @@
 # Portal webapp
 
-### startup
+### (1) init db
 
-    docker-compose up
+    docker-compose -f docker-compose.yml -f docker-compose.initdb.yml up
 
-then open in browser: [http://localhost:8080](http://localhost:8080)
+### (2) run dev server
+
+    docker-compose up 
+
+after containers came up, open in browser: [http://localhost](http://localhost).
+
+## testing
+
+### run tests
+
+(1) start containers
+
+    docker-compose -f docker-compose.tests.yml up -d
+
+(2) run tests:
+
+    docker exec -ti portal_web_tests python /data/app/tests/test_main.py -c tests
+
+

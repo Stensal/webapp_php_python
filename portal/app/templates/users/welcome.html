@@ -4,10 +4,16 @@
 
 <link href="/v/20171202/static/users/users.css" rel="stylesheet">
 
+<script type="text/javascript">
+  var NS = window.NS || {};
+  window.NS = NS:
+  NS.user_info = {{ user_info_json|safe }};
+</script>
+
 {% endblock %}
 
 
-{% block body %}
+{% block content %}
 
 <!-- content section -->
 
@@ -18,14 +24,21 @@
   </div>
   <div class="container">
 
-    you already logined.
+    Welcome back.
 
-    <div>{{ user_info_json|safe }}</div>
-
-    <div>
-      [<a href="/users/github/repos/">Repos</a>] 
-      [<a href="/users/logout/">Logout</a>]
+    <div class="pure-menu pure-menu-horizontal">
+      <ul class="pure-menu-list">
+        <li class="pure-menu-item"><span id="linkSync"></span></li>
+        <li class="pure-menu-item">
+	  <a href="/users/github/repos/" class="pure-menu-link">Repos</a></li>
+        <li class="pure-menu-item">
+	  <a href="/users/logout/" class="pure-menu-link">Logout</a></li>
+      </ul>
     </div>
+    <div>
+
+    <script type="text/javascript" 
+	    src="/static/portal/user/sync-link.js"></script>
 
   </div>
 </div>

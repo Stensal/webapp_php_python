@@ -1,71 +1,64 @@
+{# -*- coding: utf-8 -*- #}
 {% extends "base.html" %}
 
-{% block body %}
+{% block content %}
 
-    
+<!-- content section -->
 
-   <!-- content section -->
-
-	<div id="content">
-		<section class="banner main-banner primary text-center">
-			<h1 class="h1 mb20">Smart C/C++ Compiler</h1>
-			<small class="subtitle">Quickest Way to Find Memory Bugs</small>
-			<a href="/demo" class="btn btn-border btn-demo">See Our Demo</a>
-		</section>
-		<section class="sec sec2">
-			<div class="container container1280">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="left">
-							<h2 class="h2">Challenging Issues We Are Helping to Fix:</h2>
-							<p>Open Issues on Github Repos, unanswered tough questions from Stackoverflow, our compiler and testing environment provide great help to address them.</p>
-							<div class="quote">
-								<p>Open Issues on Github Repos, unanswered tough questions from Stackoverflow, our compiler and testing environment provide great help to address them.</p>
-								<footer class="author">John Doe, Co-founder of XXX</footer>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<ul class="table-bordered">
-							<li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Error with conditional labeling of summary</strong> <small>From Github</small></div></li>
-							<li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Feature request for tf.contrib.signal.stft</strong> <small>From Github</small></div></li>
-							<li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Trying to run 2_fullyconnected.ipynb but neural net doesn't learn</strong> <small>From Stack Overflow</small></div></li>
-							<li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Error with conditional labeling of summary </strong> <small>From Github</small></div></li>
-						</ul>
-					</div>
-				</div>
-			</section>
-			<section class="sec sec3">
-				<div class="container container1280">
-					<div class="row">
-						<div class="col-md-6">
-							<dl class="item-list">
-								<dt><a href="#">bitcoin / bitcoin</a></dt>
-								<dd>Bitcoin Core integration/staging free</dd>
-								<dt><a href="#">bitcoin / bitcoin</a></dt>
-								<dd>Bitcoin Core integration/staging free</dd>
-								<dt><a href="#">bitcoin / bitcoin</a></dt>
-								<dd>Bitcoin Core integration/staging free</dd>
-							</dl>
-						</div>
-						<div class="col-md-6">
-							<div class="right">
-								<h2 class="h2">Pre-built debug environment of the popular repositories</h2>
-								<p>Open Issues on Github Repos, unanswered tough questions from Stackoverflow, our compiler and testing environment provide great help to address them.</p>
-								<p>Or launch a blank docker environment to run you own code repositories.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
-		
+<div class="content">
+  <section class="banner main-banner primary text-center">
+    <h1 class="h1 mb20">Smart C/C++ Compiler</h1>
+    <small class="subtitle">Quickest Way to Find Memory Bugs</small>
+    <a href="/demo" class="pure-button btn-border btn-shadow">See Our Demo</a>
+  </section>
+  <section class="sec sec2">
+    <div class="container container1280">
+      <div class="pure-g">
+	<div class="pure-u-1 pure-u-md-1-2">
+	  <div class="left">
+	    <h2 class="h2">Challenging Issues We Are Helping to Fix:</h2>
+	    <p>Open Issues on Github Repos, unanswered tough questions from Stackoverflow, our compiler and testing environment provide great help to address them.</p>
+	    <div class="quote">
+	      <p>Open Issues on Github Repos, unanswered tough questions from Stackoverflow, our compiler and testing environment provide great help to address them.</p>
+	      <footer class="author">John Doe, Co-founder of XXX</footer>
+	    </div>
+	  </div>
 	</div>
-
-    {% include "_footer.html" %}
-
-    <script src="/static/js/global.js"></script>
-
+	<div class="pure-u-1 pure-u-md-1-2">
+	  <ul class="table-bordered">
+	    <li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Error with conditional labeling of summary</strong> <small>From Github</small></div></li>
+	    <li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Feature request for tf.contrib.signal.stft</strong> <small>From Github</small></div></li>
+	    <li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Trying to run 2_fullyconnected.ipynb but neural net doesn't learn</strong> <small>From Stack Overflow</small></div></li>
+	    <li><i class="fa fa-exclamation-circle" aria-hidden="true"></i><div class="issue-info"><strong>Error with conditional labeling of summary </strong> <small>From Github</small></div></li>
+	  </ul>
+	</div>
+      </div>
+  </section>
+  <section class="sec sec3">
+    <div class="container container1280">
+      <div class="pure-g">
+	<div class="pure-u-1 pure-u-md-1-2">
+	  <dl class="item-list">
+	    <dt><a href="#">bitcoin / bitcoin</a></dt>
+	    <dd>Bitcoin Core integration/staging free</dd>
+	    <dt><a href="#">bitcoin / bitcoin</a></dt>
+	    <dd>Bitcoin Core integration/staging free</dd>
+	    <dt><a href="#">bitcoin / bitcoin</a></dt>
+	    <dd>Bitcoin Core integration/staging free</dd>
+	  </dl>
+	</div>
+	<div class="pure-u-1 pure-u-md-1-2">
+	  <div class="right">
+	    <h2 class="h2">Pre-built debug environment of the popular repositories</h2>
+	    <p>Open Issues on Github Repos, unanswered tough questions from Stackoverflow, our compiler and testing environment provide great help to address them.</p>
+	    <p>Or launch a blank docker environment to run you own code repositories.</p>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </section>
+  </div>
+  
+</div>
 
 {% endblock %}
-

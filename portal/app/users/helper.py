@@ -2,10 +2,9 @@
 
 import json
 import hashlib
-from flask import make_response, render_template
+from flask import make_response, render_template, session
 import redis
 import six
-from session import current_user
 from libs.utils import json_dumps
 import config
 
@@ -15,6 +14,7 @@ def denied(err=None):
     vdata = {'err': err or 'Access denied.'}
     resp = make_response(render_template(tpl, **vdata))
     resp.content_type = 'text/html'
+    resp.status_code = 403
     return resp
 
 def login_required(*args, **kargs):
@@ -22,6 +22,7 @@ def login_required(*args, **kargs):
         view_func = args[0]
         @six.wraps(view_func)
         def wrapper(*v_args, **v_kargs):
+            current_user = session.user
             if not current_user.authenticated:
                 return denied(err=kargs.get('err', ''))
             return view_func(*v_args, **v_kargs)
@@ -30,6 +31,7 @@ def login_required(*args, **kargs):
         def wrapper_maker(view_func):
             @six.wraps(view_func)
             def wrapper(*v_args, **v_kargs):
+                current_user = session.user
                 if not current_user.authenticated:
                     return denied()
                 return view_func(*v_args, **v_kargs)
@@ -44,6 +46,7 @@ def user_cache(cache_key, ttl=3600):
             if cache_key:
                 key0 = hashlib.md5(json_dumps(args)).hexdigest()
                 key1 = hashlib.md5(json_dumps(kargs)).hexdigest()
+                current_user = session.user
                 uid = current_user.unified_id or '-'
                 _key = '%s-%s:%s-%s' % (uid, cache_key, key0, key1)
                 found, data = cache_fetch(_key)

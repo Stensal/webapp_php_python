@@ -10,6 +10,7 @@ if _appdir not in sys.path:
 
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 import config
 
 
@@ -17,9 +18,24 @@ db_url = 'mysql+pymysql://'
 db_url += '%(user)s:%(password)s@%(host)s:%(port)s/%(db)s'
 db_url = db_url % config.dbinfo
 
-engine = sa.create_engine(db_url, echo=True)
+_echo = ('TEST_MODE' not in os.environ) or False
+engine = sa.create_engine(db_url, echo=_echo)
 Session = sessionmaker(bind=engine)
 
 def orm_session(**kargs):
     return Session(**kargs)
+
+
+Base = declarative_base()
+
+
+class JSONSerializable(object):
+
+    def __json__(self):
+        keys = [k for k in dir(self) \
+                if not k.startswith('_') \
+        and k != 'metadata']
+        d = dict([(k, getattr(self, k)) \
+                  for k in keys])
+        return d
 

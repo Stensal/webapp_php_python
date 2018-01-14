@@ -19,38 +19,31 @@ bp = Blueprint('root_bp', __name__, template_folder='templates')
 @bp.route('/', methods=['POST', 'GET'])
 @jview('index.html')
 def index():
-    return {'title': ''}
+    return {
+        'title': ''
+    }
+
+@bp.route('/privacy/', methods=['POST', 'GET'])
+@jview('privacy.html')
+def privacy():
+    return {
+        'title': 'Privacy', 
+        'ui_components_nav_active': 'privacy'
+    }
 
 @bp.route('/demo/', methods=['POST', 'GET'])
 @jview('demo.html')
 def demo():
-    return {'title': 'Demo', 'active': 'Demo'}
+    return {
+        'title': 'Demo', 
+        'ui_components_nav_active': 'demo'
+    }
 
 @bp.route('/products/', methods=['POST', 'GET'])
 @jview('products.html')
 def products():
-    return {'title': 'Products', 'active': 'Products'}
-
-@bp.route('/issues/', methods=['POST', 'GET'])
-@jview('issues.html')
-def issues():
-    return {'title': 'Issues', 'active': 'Issues'}
-
-@bp.route('/db_test/', methods=['POST', 'GET'])
-@json_view
-def do_a_db_test():
-    conn, cur = None, None
-    rows = []
-    try:
-        conn = my.connect(**config.dbinfo)
-        cur = conn.cursor()
-        cur.execute("select now() d, '中文' c")
-        rows = cur.fetchall()
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
-    return rows
-
+    return {
+        'title': 'Products', 
+        'ui_components_nav_active': 'products'
+    }
 

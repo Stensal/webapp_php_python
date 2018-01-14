@@ -1,16 +1,28 @@
+{# -*- coding: utf-8 -*- #}
 {% extends "base.html" %}
 
-{% block body %}
+{% block content %}
 <!-- content section -->
 
-<main class="content issues">
+<main class="content issues issues-app-container">
   <div class="text-center">
     <h1 class="h1 mb20">Issues</h1>
     <p>Issues we are helping to fix</p>
   </div>
+  <div id="issues-app"></div>
+  <script type="text/javascript" 
+	  src="/static/portal/issue/app.js?r={{ _r }}"></script>
+</main>
+
+<main class="content issues" style="display:none;">
+  <div class="text-center">
+    <h1 class="h1 mb20">Issues</h1>
+    <p>Issues we are helping to fix</p>
+  </div>
+
   <div class="container">
-    <section class="issues-sec issues-labels">
-      <div class="issues-labels-inner clearfix container">
+    <section class="pure-g issues-labels">
+      <div class="pure-u-1 issues-labels-inner clearfix container">
 	<ul class="label-list list-inline pull-left">
 	  <li class="label-item"><a href="#" class="label-link current">Picked</a></li>
 	  <li class="label-item"><a href="#" class="label-link">Redis</a></li>
@@ -18,7 +30,7 @@
 	  <li class="label-item"><a href="#" class="label-link">BitCoin</a></li>
 	  <li class="label-item"><a href="#" class="label-link">OpenCV</a></li>
 	</ul>
-	<div class="">
+	<div class="pull-right issues-edit">
 	  <a href="#" class="edit-link pull-right">
 	    <i class="fa fa-pencil"></i>
 	  </a>
@@ -28,161 +40,126 @@
 	    </a>
 	    <input type="text" class="search-input" placeholder="Search Issues">
 	  </form>
+	  <div class="clear"></div>
 	  
 	</div>
 	<span id="tab-collapse">Category <i class="fa fa-caret-down"></i></span>
       </div>
     </section>
   </div>
-  <div class="container">
-    <ul class="issues-list">
-      <li class="issues-item issues-sec">
-	<p class="issues-author">
-	  <a href="#">
-	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-	    <span class="author">Xing Zhang</span>
-	  </a>
-	  <span class="date">3 days ago</span>
-	</p>
-	<h4 class="h4 title">
-	  <span class="label">Redis</span>
-	  <a href="#" class="title-text">Memory leak in rowRange?</a>
-	</h4>
-      </li>
-      <li class="issues-item issues-sec">
-	<p class="issues-author">
-	  <a href="#">
-	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-	    <span class="author">Xing Zhang</span>
-	  </a>
-	  <span class="date">3 days ago</span>
-	</p>
-	<h4 class="h4 title">
-	  <span class="label">Redis</span>
-	  <a href="#" class="title-text">Memory leak in rowRange?</a>
-	</h4>
-      </li>
-      <li class="issues-item issues-sec">
-	<p class="issues-author">
-	  <a href="#">
-	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-	    <span class="author">Xing Zhang</span>
-	  </a>
-	  <span class="date">3 days ago</span>
-	</p>
-	<h4 class="h4 title">
-	  <span class="label">Redis</span>
-	  <a href="#" class="title-text">Memory leak in rowRange?</a>
-	</h4>
-      </li>
-      <li class="issues-item issues-sec">
-	<p class="issues-author">
-	  <a href="#">
-	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-	    <span class="author">Xing Zhang</span>
-	  </a>
-	  <span class="date">3 days ago</span>
-	</p>
-	<h4 class="h4 title">
-	  <span class="label">Redis</span>
-	  <a href="#" class="title-text">Memory leak in rowRange?</a>
-	</h4>
-      </li>
-      <li class="issues-item issues-sec">
-	<p class="issues-author">
-	  <a href="#">
-	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-	    <span class="author">Xing Zhang</span>
-	  </a>
-	  <span class="date">3 days ago</span>
-	</p>
-	<h4 class="h4 title">
-	  <span class="label">Redis</span>
-	  <a href="#" class="title-text">Memory leak in rowRange?</a>
-	</h4>
-      </li>
-      <li class="issues-item issues-sec">
-	<p class="issues-author">
-	  <a href="#">
-	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-	    <span class="author">Xing Zhang</span>
-	  </a>
-	  <span class="date">3 days ago</span>
-	</p>
-	<h4 class="h4 title">
-	  <span class="label">Redis</span>
-	  <a href="#" class="title-text">Memory leak in rowRange?</a>
-	</h4>
-      </li>
-      <li class="issues-item issues-sec">
-	<p class="issues-author">
-	  <a href="#">
-	    <img src="/static/img/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
-	    <span class="author">Xing Zhang</span>
-	  </a>
-	  <span class="date">3 days ago</span>
-	</p>
-	<h4 class="h4 title">
-	  <span class="label">Redis</span>
-	  <a href="#" class="title-text">Memory leak in rowRange?</a>
-	</h4>
-      </li>
-    </ul>
-    <nav aria-label="Page navigation" class="text-center">
-      <ul class="pagination">
-	<li class="disabled">
-	  <a href="#" aria-label="Previous">
-	    <span aria-hidden="true">&laquo;</span>
-	  </a>
+
+  <div class="container pure-g">
+    <div class="pure-u-1">
+      <ul class="issues-list">
+	<li class="issues-item issues-sec">
+	  <p class="issues-author">
+	    <a href="#">
+	      <img src="/static/images/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	      <span class="author">Xing Zhang</span>
+	    </a>
+	    <span class="date">3 days ago</span>
+	  </p>
+	  <h4 class="h4 title">
+	    <span class="label">Redis</span>
+	    <a href="#" class="title-text">Memory leak in rowRange?</a>
+	  </h4>
 	</li>
-	<li class="active"><a href="#">1</a></li>
-	<li><a href="#">2</a></li>
-	<li><a href="#">3</a></li>
-	<li><a href="#">4</a></li>
-	<li><a href="#">5</a></li>
-	<li>
-	  <a href="#" aria-label="Next">
-	    <span aria-hidden="true">&raquo;</span>
-	  </a>
+	<li class="issues-item issues-sec">
+	  <p class="issues-author">
+	    <a href="#">
+	      <img src="/static/images/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	      <span class="author">Xing Zhang</span>
+	    </a>
+	    <span class="date">3 days ago</span>
+	  </p>
+	  <h4 class="h4 title">
+	    <span class="label">Redis</span>
+	    <a href="#" class="title-text">Memory leak in rowRange?</a>
+	  </h4>
+	</li>
+	<li class="issues-item issues-sec">
+	  <p class="issues-author">
+	    <a href="#">
+	      <img src="/static/images/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	      <span class="author">Xing Zhang</span>
+	    </a>
+	    <span class="date">3 days ago</span>
+	  </p>
+	  <h4 class="h4 title">
+	    <span class="label">Redis</span>
+	    <a href="#" class="title-text">Memory leak in rowRange?</a>
+	  </h4>
+	</li>
+	<li class="issues-item issues-sec">
+	  <p class="issues-author">
+	    <a href="#">
+	      <img src="/static/images/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	      <span class="author">Xing Zhang</span>
+	    </a>
+	    <span class="date">3 days ago</span>
+	  </p>
+	  <h4 class="h4 title">
+	    <span class="label">Redis</span>
+	    <a href="#" class="title-text">Memory leak in rowRange?</a>
+	  </h4>
+	</li>
+	<li class="issues-item issues-sec">
+	  <p class="issues-author">
+	    <a href="#">
+	      <img src="/static/images/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	      <span class="author">Xing Zhang</span>
+	    </a>
+	    <span class="date">3 days ago</span>
+	  </p>
+	  <h4 class="h4 title">
+	    <span class="label">Redis</span>
+	    <a href="#" class="title-text">Memory leak in rowRange?</a>
+	  </h4>
+	</li>
+	<li class="issues-item issues-sec">
+	  <p class="issues-author">
+	    <a href="#">
+	      <img src="/static/images/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	      <span class="author">Xing Zhang</span>
+	    </a>
+	    <span class="date">3 days ago</span>
+	  </p>
+	  <h4 class="h4 title">
+	    <span class="label">Redis</span>
+	    <a href="#" class="title-text">Memory leak in rowRange?</a>
+	  </h4>
+	</li>
+	<li class="issues-item issues-sec">
+	  <p class="issues-author">
+	    <a href="#">
+	      <img src="/static/images/avatar.jpg" alt="avatar" class="avatar img-circle img-responsive">
+	      <span class="author">Xing Zhang</span>
+	    </a>
+	    <span class="date">3 days ago</span>
+	  </p>
+	  <h4 class="h4 title">
+	    <span class="label">Redis</span>
+	    <a href="#" class="title-text">Memory leak in rowRange?</a>
+	  </h4>
 	</li>
       </ul>
-    </nav>
+      <div class="stensal-pager text-center">
+	<a class="hidden" aria-current="false" href="/forum/picked?page=1"><i class="fa fa-step-backward"></i></a>
+	<a class="hidden" aria-current="false" href="/forum/picked?page=0"><i class="fa fa-play pre"></i></a>
+	<ol class="">
+	  <li><a class="active" aria-current="false" href="/forum/picked?page=1">1</a></li>
+	  <li><a class="" aria-current="false" href="/forum/picked?page=2">2</a></li>
+	  <li><a class="" aria-current="false" href="/forum/picked?page=3">3</a></li>
+	  <li><a class="" aria-current="false" href="/forum/picked?page=4">4</a></li>
+	  <li><a class="" aria-current="false" href="/forum/picked?page=5">5</a></li>
+	</ol>
+	<a class="" aria-current="false" href="/forum/picked?page=2"><i class="fa fa-play"></i></a>
+	<a class="" aria-current="false" href="/forum/picked?page=24"><i class="fa fa-step-forward"></i></a>
+      </div>
+    </div>
   </div>
 </div>
 </main>
 
-{% include "_footer.html" %}
-
-    <script>
-    	$(function(){
-    		var top1 = $(".issues-labels").offset().top;
-    		var top1 = $(".issues-labels").offset().top;
-    		$(window).scroll(function(){
-
-    		　　　　　　var  win_top=$(this).scrollTop();
-
-    		　　　　　　var  top=$(".issues-labels").offset().top;
-
-    		　　　　　　if(win_top>=top){
-
-    		　　　　　　　　$(".issues-labels").addClass("issues-fixed");
-    		　　　　　　　　
-
-    		　　　　　　}//如果此处用else判断来remove fixed这个类的话是不行的，因为当加上这个类的时候，win_top与top值就一直相等了；只有与以前的距离做比较才能实现滑上去的时候能回到原来的位置。
-
-    		　　　　　　if(win_top<top1){
-
-    		　　　　　　　　$(".issues-labels").removeClass("issues-fixed");
-
-    		　　　　　　}
-
-    		　　　　});
-
-    		$('#tab-collapse').click(function(){
-    			$(".label-list").toggleClass('show');
-    		});
-    		
-    	});
-    </script>
-
 {% endblock %}
+
