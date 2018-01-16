@@ -1,10 +1,11 @@
 # Portal webapp
 
-### (1) init db
+### For the first time execution of the webapp
 
     docker-compose -f docker-compose.yml -f docker-compose.initdb.yml up
 
-### (2) run dev server
+
+### For the subsequent executions of the webapp
 
     docker-compose up 
 
